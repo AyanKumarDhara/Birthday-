@@ -26,17 +26,17 @@
        ========================================================================== */
 
     /* GLOBAL FRONTEND 2 TEDDY BEAR MASTER POSITION & SIZE CONFIGURATION */
-    --teddy-size: min(380px, 34vw);
+    --teddy-size: min(235px, 21vw);
     --teddy-left: calc(var(--rope-x, 38%) / 2 - 53px);
     --teddy-bottom: 6vh;
 
     /* Section 2 Right Dog (DOG 7 FINAL) Configuration */
-    --right-dog-size: min(385px, 31.5vw);
+    --right-dog-size: min(255px, 22.5vw);
     --right-dog-right: max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 210px));
     --right-dog-bottom: 5vh;
 
     /* Section 2 Thinking Cloud Note Configuration */
-    --cloud-size: min(560px, 44vw);
+    --cloud-size: min(370px, 32vw);
     --cloud-right: calc(var(--right-dog-right) + 250px);
     --cloud-bottom: calc(5vh + min(415px, 34vw));
 
@@ -748,7 +748,7 @@ body.garden-mode {
 }
 
 .section2-frame-img {
-    width: min(860px, 58vw);
+    width: min(520px, 36vw);
     height: auto;
     display: block;
     filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
@@ -850,24 +850,6 @@ body.garden-mode {
     }
 }
 
-
-/* SECTION 2 SPECIFIC SURGICAL SCALE OVERRIDES (MATCHING IMAGE 2 REFERENCE SCALE) */
-#gardenSegment-2 .section2-frame-img {
-    width: min(520px, 36vw);
-}
-
-#gardenSegment-2 .section-2-teddy {
-    width: min(235px, 21vw);
-}
-
-#gardenSegment-2 .section-2-right-dog {
-    width: min(255px, 22.5vw);
-    aspect-ratio: 385 / 479;
-}
-
-#gardenSegment-2 .section-2-thinking-cloud {
-    width: min(370px, 32vw);
-}
 
 /* GLOBAL FRONTEND 2 REUSABLE THINKING CLOUD NOTE (Original Unmirrored PNG) */
 .section-thinking-cloud,
