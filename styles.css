@@ -1,0 +1,2451 @@
+/* ==========================================================================
+   ROYAL MAGICAL BIRTHDAY - 5-LAYER INDEPENDENT TRANSITION STYLES
+   ========================================================================== */
+
+:root {
+    --primary-gold: #f4d068;
+    --gold-glow: #ffe89e;
+    --dark-gold: #b8860b;
+    --royal-blue: #1a233a;
+    --scroll-heading: #7c2d12;
+    
+    --font-heading: 'Cinzel Decorative', cursive, serif;
+    --font-script: 'Great Vibes', cursive;
+    --font-body: 'Outfit', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+
+    /* ==========================================================================
+       SECTION 2 MASTER LAYOUT CONFIGURATION (APPROVED & LOCKED SOURCE OF TRUTH)
+       ==========================================================================
+       1. CONTINUOUS ROPE: Anchor @ left: var(--rope-x, 38%), Height 1300vh, Object-fit: fill.
+       2. TOP FRAME (Frame 0): Top 3vh, Width min(860px, 58vw), Centered on rope-x.
+       3. BOTTOM FRAME (Frame 14): Top 49vh, Width min(860px, 58vw), Centered on rope-x.
+       4. TEDDY BEAR: Size min(380px, 34vw), Left calc(rope-x / 2 - 53px), Bottom 6vh.
+       5. DOG 7 FINAL: Size min(385px, 31.5vw), Right max(2vw, ... - 210px), Bottom 5vh, ScaleX(-1) Facing LEFT.
+       6. THINKING CLOUD: Size min(560px, 44vw), Right (dog-right + 250px), Bottom (5vh + min(415px, 34vw)).
+       ========================================================================== */
+
+    /* GLOBAL FRONTEND 2 TEDDY BEAR MASTER POSITION & SIZE CONFIGURATION */
+    --teddy-size: min(380px, 34vw);
+    --teddy-left: calc(var(--rope-x, 38%) / 2 - 53px);
+    --teddy-bottom: 6vh;
+
+    /* Section 2 Right Dog (DOG 7 FINAL) Configuration */
+    --right-dog-size: min(385px, 31.5vw);
+    --right-dog-right: max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 210px));
+    --right-dog-bottom: 5vh;
+
+    /* Section 2 Thinking Cloud Note Configuration */
+    --cloud-size: min(560px, 44vw);
+    --cloud-right: calc(var(--right-dog-right) + 250px);
+    --cloud-bottom: calc(5vh + min(415px, 34vw));
+
+    /* Section 2 aliases pointing to global master config */
+    --section-2-teddy-size: var(--teddy-size);
+    --section-2-teddy-left: var(--teddy-left);
+    --section-2-teddy-bottom: var(--teddy-bottom);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    background-color: #0d1117;
+    color: #f8fafc;
+    user-select: none;
+}
+
+body.lock-scroll {
+    overflow: hidden !important;
+}
+
+/* --------------------------------------------------------------------------
+   STAGE WRAPPER & CAMERA PUSH
+   -------------------------------------------------------------------------- */
+.scene-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    overflow: hidden;
+    background-color: #0d1117;
+    will-change: opacity;
+    transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.stage {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transform-origin: 50% 53%;
+    transition: transform 3.0s cubic-bezier(0.25, 1, 0.35, 1);
+    will-change: transform;
+}
+
+/* Subtle cinematic camera push-in (keeping full castle architecture clearly visible) */
+.stage.zooming {
+    transform: scale(1.08);
+}
+
+.layer {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   1. STATIONARY CASTLE BACKGROUND (Z-INDEX 1)
+   -------------------------------------------------------------------------- */
+.bg-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.06);
+    transform-origin: center center;
+    z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   1.5 FIRST FRONTEND CORNER BALLOONS (2 UPPER-LEFT, 2 UPPER-RIGHT - STATIC)
+   -------------------------------------------------------------------------- */
+.first-frontend-balloons-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.ff-balloon {
+    position: absolute;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+}
+
+.ff-balloon-top-left-1 {
+    top: 1.5vh;
+    left: 2vw;
+    width: clamp(100px, 13.5vw, 175px);
+}
+
+.ff-balloon-top-left-2 {
+    top: 10vh;
+    left: 9.5vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+.ff-balloon-top-right-1 {
+    top: 2vh;
+    right: 2.5vw;
+    width: clamp(100px, 13.5vw, 175px);
+}
+
+.ff-balloon-top-right-2 {
+    top: 10.5vh;
+    right: 10vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+@media (max-width: 768px) {
+    .ff-balloon-top-left-1 {
+        top: 1vh;
+        left: 1vw;
+        width: clamp(75px, 20vw, 110px);
+    }
+    .ff-balloon-top-left-2 {
+        top: 7.5vh;
+        left: 10.5vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+    .ff-balloon-top-right-1 {
+        top: 1vh;
+        right: 1vw;
+        width: clamp(75px, 20vw, 110px);
+    }
+    .ff-balloon-top-right-2 {
+        top: 7.5vh;
+        right: 10.5vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   1.6 FIRST FRONTEND ROYAL SCEPTER (BOTTOM-LEFT - STATIC)
+   -------------------------------------------------------------------------- */
+.ff-scepter-bottom-left {
+    position: absolute;
+    bottom: 6vh;
+    left: 4vw;
+    width: clamp(75px, 8.5vw, 120px);
+    height: auto;
+    object-fit: contain;
+    z-index: 20;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 15px rgba(244, 208, 104, 0.25));
+}
+
+@media (max-width: 768px) {
+    .ff-scepter-bottom-left {
+        bottom: 5vh;
+        left: 3vw;
+        width: clamp(55px, 14vw, 85px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   1.7 FIRST FRONTEND PINK BOW (BOTTOM-RIGHT - STATIC)
+   -------------------------------------------------------------------------- */
+.ff-bow-bottom-right {
+    position: absolute;
+    bottom: 6vh;
+    right: 3.5vw;
+    width: clamp(80px, 8.5vw, 125px);
+    height: auto;
+    object-fit: contain;
+    z-index: 20;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 15px rgba(255, 182, 193, 0.3));
+}
+
+@media (max-width: 768px) {
+    .ff-bow-bottom-right {
+        bottom: 5vh;
+        right: 2.5vw;
+        width: clamp(58px, 15vw, 90px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   2. MAGICAL ENERGY & PARTICLES CANVAS (Z-INDEX 10)
+   -------------------------------------------------------------------------- */
+.magic-energy-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   5. DOGS / CANDLE / SCROLL (Z-INDEX 25+ Foreground)
+   -------------------------------------------------------------------------- */
+.scroll-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 25;
+    transition: opacity 0.8s ease-out;
+}
+
+.video-frame-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 2.2vh;
+    height: 95.5vh;
+    aspect-ratio: 941 / 1671;
+    width: calc(95.5vh * (941 / 1671));
+    transform: translateX(-50%) scale(1.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.scroll-layer video,
+.scroll-layer img,
+.scroll-video,
+.front-page-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    z-index: 1;
+}
+
+.puppy-left {
+    left: 21.0%;
+    top: 41.1%;
+    width: 17.09%;
+    height: 72.2%;
+    object-fit: contain;
+    z-index: 26;
+    transition: opacity 0.8s ease-out;
+}
+
+.puppy-left-cloud {
+    left: 14.5%;
+    top: 38.5%;
+    width: 24.0%;
+    height: auto;
+    object-fit: contain;
+    z-index: 27;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.puppy-right {
+    left: 57.5%;
+    top: 62.7%;
+    width: 30.08%;
+    height: 33.45%;
+    object-fit: contain;
+    z-index: 27;
+    transition: opacity 0.8s ease-out;
+}
+
+/* INTERACTIVE CANDLE & FLAME (Z-INDEX 28) */
+.candle-wrapper {
+    position: absolute;
+    left: 47.65%;
+    top: 67.0%;
+    width: 4.59%;
+    height: 35.02%;
+    z-index: 28;
+    transition: opacity 0.8s ease-out;
+}
+
+.candle-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    bottom: -20px;
+    left: -25px;
+    right: -25px;
+    pointer-events: auto;
+}
+
+.candle-wrapper.lit {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.candle-wrapper:not(.lit) {
+    cursor: default;
+    pointer-events: none;
+}
+
+.candle-base {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.candle-flame {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: flameFlicker 1.8s infinite ease-in-out;
+    transform-origin: 50% 16%;
+    transition: transform 0.15s ease-out, opacity 0.35s ease-in;
+}
+
+.candle-halo {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 230, 160, 0.75) 0%, rgba(245, 158, 11, 0.35) 45%, transparent 70%);
+    filter: blur(4px);
+    opacity: 0.9;
+    animation: haloPulse 2.5s infinite ease-in-out;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.candle-wrapper.blowing .candle-flame {
+    animation: none;
+    transform: rotate(-14deg) scaleX(1.25) scaleY(0.85);
+}
+
+.candle-wrapper:not(.lit) .candle-flame {
+    animation: none;
+    opacity: 0;
+    transform: translateY(18px) scale(0.05);
+}
+
+.candle-wrapper:not(.lit) .candle-halo {
+    animation: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15);
+}
+
+/* Fading Class for Initial Foreground Scene */
+.layer.fading,
+.candle-wrapper.fading {
+    opacity: 0 !important;
+    transition: opacity 0.8s ease-out !important;
+}
+
+/* Sparkle & Smoke Canvas */
+.sparkle-canvas {
+    position: absolute;
+    top: -60%;
+    left: -200%;
+    width: 500%;
+    height: 300%;
+    pointer-events: none;
+    z-index: 29;
+}
+
+/* --------------------------------------------------------------------------
+   6. GOLDEN LIGHT TAKEOVER (Z-INDEX 100 - Full Viewport Golden-White Illumination)
+   -------------------------------------------------------------------------- */
+.golden-light-takeover {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 160vmax;
+    height: 160vmax;
+    transform: translate(-50%, -50%) scale(0.01);
+    opacity: 0;
+    z-index: 100;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at center,
+        #fffef5 0%,
+        #fff8d6 18%,
+        #fef08a 38%,
+        #facc15 62%,
+        #eab308 80%,
+        #ca8a04 92%,
+        rgba(161, 98, 7, 0.98) 100%
+    );
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+/* ===== GOLDEN BACKDROP BLINK FIX — START ===== */
+.golden-transition-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    display: none;
+    background-color: #0d1117;
+}
+/* ===== GOLDEN BACKDROP BLINK FIX — END ===== */
+
+/* ===== HANDOFF LOADING SCREEN — START ===== */
+.handoff-loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: url('assets/decorations/loading_background.png') center/cover no-repeat;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease-out;
+    will-change: opacity;
+}
+
+.handoff-loading-screen.active {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* ===== HANDOFF LOADING TEXT BREATHING ANIMATION (PERMANENT) — START ===== */
+@keyframes loadingTextBreathing {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.045);
+    }
+}
+
+.handoff-loading-img {
+    max-width: 82vw;
+    max-height: 42vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 8px 24px rgba(180, 83, 9, 0.18));
+    transform-origin: 50% 50%;
+    will-change: transform;
+}
+
+.handoff-loading-screen.active .handoff-loading-img {
+    animation: loadingTextBreathing 2.6s ease-in-out infinite;
+}
+/* ===== HANDOFF LOADING TEXT BREATHING ANIMATION (PERMANENT) — END ===== */
+/* ===== HANDOFF LOADING SCREEN — END ===== */
+
+/* Animations */
+@keyframes flameFlicker {
+    0%, 100% { transform: rotate(0deg) scaleY(1); filter: brightness(1); }
+    25% { transform: rotate(1.2deg) scaleY(1.02) scaleX(0.98); filter: brightness(1.04); }
+    50% { transform: rotate(-1.5deg) scaleY(0.97) scaleX(1.01); filter: brightness(0.96); }
+    75% { transform: rotate(0.8deg) scaleY(1.03) scaleX(0.99); filter: brightness(1.02); }
+}
+
+@keyframes haloPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.98; filter: blur(5px); }
+}
+
+/* ==========================================================================
+   FINAL SCROLLING SECTION: MAGICAL MEMORY GARDEN WORLD
+   ========================================================================== */
+.memory-garden-section {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    /* 8 Active Sections * 100vh per section = 800vh total height for exact native scrollbar position tracking */
+    min-height: 800vh;
+    overflow: hidden; /* Prevents blurred transparent bleed edges from leaking out */
+    background-color: #0d1117;
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+    pointer-events: none;
+    clip-path: circle(0% at 50% 40%);
+    will-change: opacity, clip-path;
+}
+
+.memory-garden-section.active {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+html.garden-mode,
+body.garden-mode {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+/* LAYER 1: PERSISTENT SCROLLING BACKGROUND (Lowest layer - Z-INDEX 1) */
+.garden-bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-out;
+}
+
+.memory-garden-section.active .garden-bg-layer,
+.garden-mode .garden-bg-layer {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* CANVAS BACKDROP FOR PERSISTENT BACKGROUND */
+.garden-bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    will-change: transform;
+    transform: translateY(0) scale(1.02);
+}
+
+.garden-atmosphere-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.garden-atmosphere-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.garden-rope-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.garden-photos-layer,
+.garden-notes-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.garden-photos-layer { z-index: 4; }
+.garden-notes-layer { z-index: 5; }
+
+/* LAYER 6: TEXT / CONTENT OVERLAY (Z-INDEX 6) */
+.garden-content-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: auto;
+}
+
+.garden-particles-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 7;
+    pointer-events: none;
+}
+
+.garden-particles-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .memory-garden-section {
+        min-height: 800vh;
+    }
+    
+    .garden-bg-layer {
+        background-position: center top;
+        background-size: 100% auto;
+    }
+}
+
+/* ==========================================================================
+   CINEMATIC SEGMENT-BY-SEGMENT SCROLL & CONTINUOUS ROPE STYLES
+   ========================================================================== */
+
+/* 1. CONTINUOUS ROPE & PER-SECTION ROPE ARCHITECTURE (Layer 3 - Z-INDEX 3) */
+.continuous-rope-img {
+    display: none;
+}
+
+.segment-rope-anchor {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.segment-rope-img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(24px, 3.2vw, 42px);
+    height: 14040px;
+    object-fit: fill;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+/* SECTION 2 HANGING FRAMES INTEGRATION */
+.section2-frame-wrapper {
+    position: absolute;
+    left: var(--rope-x, 38%);
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-origin: center top;
+}
+
+.section2-frame-wrapper-1 {
+    top: 3vh;
+}
+
+.section2-frame-wrapper-2 {
+    top: 49vh;
+}
+
+/* SECTIONS 2–5 FRAME/STRING LAYERING FIX: UPPER FRAME > LOWER FRAME STRING */
+#gardenSegment-2 .section2-frame-wrapper-1,
+#gardenSegment-3 .section2-frame-wrapper-1,
+#gardenSegment-4 .section2-frame-wrapper-1,
+#gardenSegment-5 .section2-frame-wrapper-1 {
+    z-index: 6;
+}
+
+#gardenSegment-2 .section2-frame-wrapper-2,
+#gardenSegment-3 .section2-frame-wrapper-2,
+#gardenSegment-4 .section2-frame-wrapper-2,
+#gardenSegment-5 .section2-frame-wrapper-2 {
+    z-index: 5;
+}
+
+.section2-frame-img {
+    width: min(860px, 58vw);
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
+    transition: transform 0.4s ease-out;
+}
+
+
+/* Subtle magical hover & click floating animation */
+@keyframes section2HoverFloat {
+    0% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+    50% { transform: translateX(-50%) translateY(-4px) rotate(-0.5deg); }
+    100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+}
+
+.section2-frame-wrapper.is-hovered {
+    animation: section2HoverFloat 2.4s ease-in-out infinite alternate;
+}
+
+.section2-frame-img:hover {
+    transform: scale(1.03);
+}
+
+/* Automatic Entrance Animation (Section-Entry ONLY) */
+@keyframes section2EntranceFloat {
+    0% {
+        transform: translateX(-50%) translateY(0px) rotate(0deg) scale(1.0);
+    }
+    45% {
+        transform: translateX(-50%) translateY(-7px) rotate(-0.65deg) scale(1.022);
+    }
+    100% {
+        transform: translateX(-50%) translateY(0px) rotate(0deg) scale(1.0);
+    }
+}
+
+.section2-frame-wrapper.is-entrance-animating {
+    animation: section2EntranceFloat 1.6s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+}
+
+/* GLOBAL FRONTEND 2 REUSABLE TEDDY BEAR COMPONENT */
+.section-teddy,
+.section-2-teddy,
+.section-3-teddy,
+.section-4-teddy,
+.section-5-teddy {
+    position: absolute;
+    left: var(--teddy-left);
+    transform: translateX(-50%);
+    bottom: var(--teddy-bottom);
+    width: var(--teddy-size);
+    height: auto;
+    object-fit: contain;
+    z-index: 6;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .section-teddy,
+    .section-2-teddy,
+    .section-3-teddy,
+    .section-4-teddy,
+    .section-5-teddy {
+        left: calc(var(--rope-x, 38%) / 2 - 32px);
+        transform: translateX(-50%);
+        bottom: 4vh;
+        width: min(240px, 50vw);
+    }
+}
+
+/* GLOBAL FRONTEND 2 REUSABLE RIGHT-SIDE DOG CHARACTER (Facing Left) */
+.section-right-dog,
+.section-2-right-dog,
+.section-3-right-dog,
+.section-4-right-dog,
+.section-5-right-dog {
+    position: absolute;
+    right: var(--right-dog-right);
+    bottom: var(--right-dog-bottom);
+    width: var(--right-dog-size);
+    height: auto;
+    object-fit: contain;
+    transform: scaleX(-1); /* Horizontally mirror video so dog faces LEFT */
+    z-index: 6;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .section-right-dog,
+    .section-2-right-dog,
+    .section-3-right-dog,
+    .section-4-right-dog,
+    .section-5-right-dog {
+        right: calc(4vw - 108px);
+        bottom: 4vh;
+        width: min(250px, 47vw);
+    }
+}
+
+/* GLOBAL FRONTEND 2 REUSABLE THINKING CLOUD NOTE (Original Unmirrored PNG) */
+.section-thinking-cloud,
+.section-2-thinking-cloud,
+.section-3-thinking-cloud,
+.section-4-thinking-cloud,
+.section-5-thinking-cloud {
+    position: absolute;
+    right: var(--cloud-right);
+    bottom: var(--cloud-bottom);
+    width: var(--cloud-size);
+    height: auto;
+    object-fit: contain;
+    z-index: 7;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .section-thinking-cloud,
+    .section-2-thinking-cloud,
+    .section-3-thinking-cloud,
+    .section-4-thinking-cloud,
+    .section-5-thinking-cloud {
+        right: calc(4vw + 30px);
+        bottom: calc(4vh + min(245px, 45vw));
+        width: min(340px, 62vw);
+    }
+}
+
+/* 2. SEGMENTS CONTAINER (Layer 6 - Z-INDEX 6) */
+.segments-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+}
+
+.garden-segment {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 4vw;
+    overflow: hidden;
+}
+
+/* ===== SECTION 1 SECOND FRONTEND BALLOONS — START ===== */
+.section1-balloons-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.section1-balloon {
+    position: absolute;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+}
+
+.section1-balloon-top-left-1 {
+    top: 1.5vh;
+    left: 2vw;
+    width: clamp(100px, 13.5vw, 175px);
+}
+
+.section1-balloon-top-left-2 {
+    top: 10vh;
+    left: 9.5vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+.section1-balloon-top-right-1 {
+    top: 2vh;
+    right: 2.5vw;
+    width: clamp(100px, 13.5vw, 175px);
+}
+
+.section1-balloon-top-right-2 {
+    top: 10.5vh;
+    right: 10vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+.section1-balloon-bottom-left {
+    bottom: 6vh;
+    left: 4vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+.section1-balloon-bottom-right {
+    bottom: 6vh;
+    right: 4vw;
+    width: clamp(85px, 10.5vw, 145px);
+}
+
+@media (max-width: 768px) {
+    .section1-balloon-top-left-1 {
+        top: 1vh;
+        left: 1vw;
+        width: clamp(75px, 20vw, 110px);
+    }
+    .section1-balloon-top-left-2 {
+        top: 7.5vh;
+        left: 10.5vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+    .section1-balloon-top-right-1 {
+        top: 1vh;
+        right: 1vw;
+        width: clamp(75px, 20vw, 110px);
+    }
+    .section1-balloon-top-right-2 {
+        top: 7.5vh;
+        right: 10.5vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+    .section1-balloon-bottom-left {
+        bottom: 5vh;
+        left: 3vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+    .section1-balloon-bottom-right {
+        bottom: 5vh;
+        right: 3vw;
+        width: clamp(60px, 16vw, 90px);
+    }
+}
+/* ===== SECTION 1 SECOND FRONTEND BALLOONS — END ===== */
+
+.segment-inner {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+}
+
+/* Alternating segment sides */
+.segment-side-left .segment-inner {
+    flex-direction: row;
+}
+
+.segment-side-right .segment-inner {
+    flex-direction: row-reverse;
+}
+
+/* Central Rope Clip Anchor (Attaches frame to the single continuous rope) */
+.rope-clip-anchor {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+.rope-peg {
+    width: 18px;
+    height: 18px;
+    background: radial-gradient(circle, #f4d068 0%, #b8860b 80%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.7), inset 0 0 4px #ffffff;
+    border: 2px solid #5c4302;
+}
+
+/* 3. HANGING PHOTO FRAME (Layer 4 & Layer 6) */
+.memory-photo-frame-wrapper {
+    flex: 1;
+    max-width: 440px;
+    position: relative;
+    perspective: 1000px;
+}
+
+.memory-photo-frame {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(145deg, #231b14 0%, #15100a 100%);
+    border: 8px solid #2d2218;
+    outline: 2px solid rgba(244, 208, 104, 0.4);
+    border-radius: 12px;
+    padding: 14px 14px 22px 14px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75), 0 0 20px rgba(244, 208, 104, 0.15);
+    transform-origin: top center;
+    transition: transform 0.6s ease-out, box-shadow 0.6s ease-out;
+    animation: pendulumSway 7s ease-in-out infinite alternate;
+}
+
+.memory-photo-frame:hover {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 0 25px 55px rgba(0, 0, 0, 0.85), 0 0 30px rgba(244, 208, 104, 0.35);
+}
+
+/* Standalone Artwork Segment 1 Layout */
+.standalone-artwork-inner {
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: min(92vw, 1450px) !important;
+    margin: 0 auto !important;
+    min-height: 75vh;
+}
+
+.standalone-artwork-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.standalone-artwork-img {
+    width: min(90vw, 1350px);
+    height: auto;
+    max-height: 85vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 18px 45px rgba(0, 0, 0, 0.7));
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 4px;
+    opacity: 1;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.standalone-artwork-img:hover {
+    transform: none !important;
+}
+
+.photo-image-area {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #0d1117;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(244, 208, 104, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-image-area.natural-aspect {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    max-height: 65vh;
+    background: transparent;
+    border: none;
+}
+
+.memory-photo-img {
+    width: 100%;
+    height: auto;
+    max-height: 65vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 6px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65);
+}
+
+.photo-placeholder-clean {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(254, 240, 138, 0.08) 0%, rgba(13, 17, 23, 0.85) 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(244, 208, 104, 0.4);
+}
+
+.photo-placeholder-clean svg {
+    width: 38px;
+    height: 38px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 6px rgba(244, 208, 104, 0.3));
+}
+
+.frame-caption {
+    margin-top: 10px;
+    text-align: center;
+    font-family: var(--font-script);
+    font-size: 1.4rem;
+    color: var(--gold-glow);
+    letter-spacing: 1px;
+}
+
+/* 4. HANDWRITTEN NOTE CARD (Layer 5 & Layer 6) */
+.memory-note-card-wrapper {
+    flex: 1;
+    max-width: 460px;
+    position: relative;
+}
+
+.memory-note-card {
+    position: relative;
+    width: 100%;
+    min-height: 180px;
+    background: linear-gradient(135deg, rgba(28, 22, 16, 0.92) 0%, rgba(18, 14, 10, 0.96) 100%);
+    border: 1px solid rgba(244, 208, 104, 0.35);
+    border-radius: 14px;
+    padding: 2.2rem 2.4rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 15px rgba(244, 208, 104, 0.1);
+    backdrop-filter: blur(8px);
+    transition: transform 0.5s ease-out, border-color 0.5s ease-out;
+}
+
+.memory-note-card:hover {
+    border-color: rgba(244, 208, 104, 0.65);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(244, 208, 104, 0.25);
+}
+
+.card-chapter-tag {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    color: var(--primary-gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+.card-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: #fffbe8;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.card-divider {
+    width: 45px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-gold), transparent);
+    margin-bottom: 1.2rem;
+}
+
+.card-script-body {
+    font-family: var(--font-script);
+    font-size: 1.85rem;
+    line-height: 1.45;
+    color: #ffe89e;
+    text-shadow: 0 0 10px rgba(254, 240, 138, 0.25);
+    margin-bottom: 1.4rem;
+}
+
+.card-date-footer {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: rgba(255, 232, 158, 0.55);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-date-footer::before {
+    content: '✦';
+    color: var(--primary-gold);
+    font-size: 0.7rem;
+}
+
+.empty-card-space {
+    min-height: 60px;
+}
+
+/* Animations */
+@keyframes pendulumSway {
+    0% { transform: rotate(-2.2deg); }
+    100% { transform: rotate(2.2deg); }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 900px) {
+    .garden-segment {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    .segment-inner {
+        flex-direction: column !important;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .memory-photo-frame-wrapper,
+    .memory-note-card-wrapper {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .card-script-body {
+        font-size: 1.6rem;
+    }
+}
+
+/* ===== BIRTHDAY REVEAL — START ===== */
+.birthday-reveal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 150;
+    display: none;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Soft champagne-gold central glow behind title */
+.birthday-reveal-overlay::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 78vw;
+    height: 78vh;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 254, 242, 0.75) 0%,
+        rgba(254, 243, 199, 0.48) 32%,
+        rgba(251, 191, 36, 0.16) 60%,
+        rgba(245, 158, 11, 0) 80%
+    );
+    pointer-events: none;
+    z-index: 8;
+}
+
+/* Subtle warm vignette falloff towards outer edges */
+.birthday-reveal-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0) 48%,
+        rgba(180, 83, 9, 0.14) 75%,
+        rgba(146, 64, 14, 0.30) 100%
+    );
+    pointer-events: none;
+    z-index: 9;
+}
+
+/* Subtle Magical Atmosphere Sparkles */
+.birthday-sparkles-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 11;
+    pointer-events: none;
+}
+
+.birthday-sparkle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #fef08a 60%, rgba(253, 224, 71, 0) 100%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 18px rgba(250, 204, 21, 0.7);
+    animation: royalSparkleShimmer 3.2s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+.sp-1 { top: 20%; left: 26%; width: 6px; height: 6px; animation-delay: 0s; }
+.sp-2 { top: 16%; right: 24%; width: 8px; height: 8px; animation-delay: 0.6s; }
+.sp-3 { top: 40%; left: 22%; width: 5px; height: 5px; animation-delay: 1.2s; }
+.sp-4 { top: 46%; right: 20%; width: 7px; height: 7px; animation-delay: 0.3s; }
+.sp-5 { top: 70%; left: 28%; width: 8px; height: 8px; animation-delay: 1.8s; }
+.sp-6 { top: 74%; right: 26%; width: 5px; height: 5px; animation-delay: 0.9s; }
+.sp-7 { top: 30%; left: 31%; width: 6px; height: 6px; animation-delay: 2.1s; }
+.sp-8 { top: 60%; right: 29%; width: 7px; height: 7px; animation-delay: 1.5s; }
+
+@keyframes royalSparkleShimmer {
+    0% { opacity: 0.15; transform: scale(0.6); }
+    50% { opacity: 0.85; transform: scale(1.3); }
+    100% { opacity: 0.15; transform: scale(0.6); }
+}
+
+/* Flexbox guarantees true mathematical viewport centering for the core royal stack */
+.birthday-text-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.royal-center-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    pointer-events: none;
+    opacity: 0;
+    transform-origin: center center;
+    will-change: opacity, transform;
+}
+
+/* Main Crown directly above text */
+.royal-crown-img {
+    width: 10.5vw;
+    max-width: 120px;
+    min-width: 80px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 20px rgba(255, 225, 120, 0.5));
+    will-change: opacity, transform;
+}
+
+/* Main Birthday Text Box & Image (Hero Element - Centered, Large & Dominant) */
+.birthday-text-box {
+    width: 78vw;
+    max-width: 920px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.birthday-text-img {
+    width: 100%;
+    height: auto;
+    max-height: 52vh;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.42)) drop-shadow(0 0 45px rgba(255, 230, 150, 0.6)) drop-shadow(0 0 18px rgba(255, 245, 200, 0.7));
+}
+
+/* Birthday Cake directly below text */
+.royal-cake-img {
+    width: 13.4vw;
+    max-width: 156px;
+    min-width: 100px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 20px rgba(255, 225, 120, 0.45));
+    will-change: opacity, transform;
+}
+
+.birthday-decorations-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.decor-item {
+    position: absolute;
+    display: block;
+    object-fit: contain;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 18px rgba(255, 220, 130, 0.38));
+    will-change: opacity, transform;
+}
+
+/* Luxurious framing balloon & asset sizes (refined 10-15% scale pass for central breathing room) */
+.balloon-hero-lg { width: 15.0vw; min-width: 145px; max-width: 240px; z-index: 4; }
+.balloon-hero-md { width: 11.2vw; min-width: 108px; max-width: 178px; z-index: 3; }
+.balloon-hero-sm { width: 7.8vw;  min-width: 75px;  max-width: 125px; z-index: 5; }
+.decor-accent-sm { width: 5.6vw;  min-width: 55px;  max-width: 92px;  z-index: 2; }
+
+/* ORGANIC LEFT SIDE BALLOON CLUSTER (Pushed slightly outward for title breathing room) */
+.pos-left-1  { top: -2%;  left: -4.0%; z-index: 4; }
+.pos-left-2  { top: 2%;   left: 7.5%;  z-index: 5; }
+.pos-left-3  { top: 12%;  left: 2.0%;  z-index: 3; }
+.pos-left-4  { top: 22%;  left: -3.5%; z-index: 4; }
+.pos-left-5  { top: 28%;  left: 8.0%;  z-index: 5; }
+.pos-left-6  { top: 38%;  left: 0.5%;  z-index: 3; }
+.pos-left-7  { top: 48%;  left: 6.8%;  z-index: 4; }
+.pos-left-8  { top: 54%;  left: -0.5%; z-index: 2; }
+.pos-left-9  { top: 62%;  left: -3.0%; z-index: 4; }
+.pos-left-10 { top: 68%;  left: 8.5%;  z-index: 2; }
+.pos-left-11 { top: 74%;  left: 1.0%;  z-index: 3; }
+.pos-left-12 { top: 81%;  left: 6.0%;  z-index: 2; }
+.pos-left-13 { top: 85%;  left: -2.0%; z-index: 5; }
+.pos-left-14 { top: 88%;  left: 3.5%;  z-index: 4; }
+.pos-left-15 { top: 16%;  left: 9.5%;  z-index: 3; }
+.pos-left-16 { top: 44%;  left: -4.5%; z-index: 4; }
+
+/* ORGANIC RIGHT SIDE BALLOON CLUSTER (Pushed slightly outward for title breathing room) */
+.pos-right-1  { top: -2%;  right: -4.0%; z-index: 4; }
+.pos-right-2  { top: 2%;   right: 7.5%;  z-index: 5; }
+.pos-right-3  { top: 12%;  right: 2.0%;  z-index: 3; }
+.pos-right-4  { top: 22%;  right: -3.5%; z-index: 4; }
+.pos-right-5  { top: 28%;  right: 8.0%;  z-index: 5; }
+.pos-right-6  { top: 38%;  right: 0.5%;  z-index: 3; }
+.pos-right-7  { top: 48%;  right: 6.8%;  z-index: 4; }
+.pos-right-8  { top: 54%;  right: -0.5%; z-index: 2; }
+.pos-right-9  { top: 62%;  right: -3.0%; z-index: 4; }
+.pos-right-10 { top: 68%;  right: 8.5%;  z-index: 2; }
+.pos-right-11 { top: 74%;  right: 1.0%;  z-index: 3; }
+.pos-right-12 { top: 81%;  right: 6.0%;  z-index: 2; }
+.pos-right-13 { top: 85%;  right: -2.0%; z-index: 5; }
+.pos-right-14 { top: 88%;  right: 3.5%;  z-index: 4; }
+.pos-right-15 { top: 16%;  right: 9.5%;  z-index: 3; }
+.pos-right-16 { top: 44%;  right: -4.5%; z-index: 4; }
+
+/* Responsive media queries */
+@media (max-width: 768px) {
+    .birthday-text-box {
+        width: 90vw;
+        max-width: 100%;
+    }
+    .royal-crown-img { width: 18vw; min-width: 70px; max-width: 100px; }
+    .royal-cake-img { width: 22.5vw; min-width: 90px; max-width: 130px; }
+    .balloon-hero-lg { width: 19vw; min-width: 90px; max-width: 135px; }
+    .balloon-hero-md { width: 15vw; min-width: 70px; max-width: 105px; }
+    .balloon-hero-sm { width: 10vw; min-width: 48px; max-width: 75px; }
+    .decor-accent-sm { width: 8vw; min-width: 40px; max-width: 62px; }
+}
+/* ===== BIRTHDAY REVEAL — END ===== */
+
+/* ===== SECTION 2 BALLOON DECORATIONS — START ===== */
+.section2-temp-balloon-container {
+    position: absolute;
+    top: 3vh;
+    left: 3vw;
+    width: 35vw;
+    height: 45vh;
+    pointer-events: none;
+    z-index: 5;
+    user-select: none;
+}
+
+.section2-temp-balloon {
+    position: absolute;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    animation: tempBalloonFloat 4.5s ease-in-out infinite alternate;
+}
+
+.section2-temp-balloon-1 {
+    top: 1.5vh;
+    left: 0.5vw;
+    width: clamp(115px, 15.8vw, 214px);
+    animation-delay: 0s;
+}
+
+.section2-temp-balloon-2 {
+    top: 6.5vh;
+    left: 13.5vw;
+    width: clamp(98px, 13.5vw, 183px);
+    rotate: 10deg;
+    animation-delay: -2.2s;
+}
+
+.section2-temp-right-corner-balloon {
+    position: absolute;
+    top: 3.5vh;
+    right: 3.5vw;
+    width: clamp(150px, 14vw, 230px);
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    z-index: 5;
+    animation: tempBalloonFloat 4.5s ease-in-out infinite alternate;
+    animation-delay: -1.5s;
+}
+
+@keyframes tempBalloonFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(-8px);
+    }
+}
+
+@media (max-width: 768px) {
+    .section2-temp-balloon-container {
+        top: 2.5vh;
+        left: 2vw;
+        width: 40vw;
+        height: 40vh;
+    }
+    .section2-temp-balloon-1 {
+        top: 1vh;
+        left: 0.5vw;
+        width: clamp(81px, 18.8vw, 128px);
+    }
+    .section2-temp-balloon-2 {
+        top: 6vh;
+        left: 13.5vw;
+        width: clamp(68px, 16vw, 109px);
+        rotate: 10deg;
+    }
+    .section2-temp-right-corner-balloon {
+        top: 3vh;
+        right: 3vw;
+        width: clamp(100px, 18vw, 150px);
+    }
+}
+/* ===== SECTION 2 BALLOON DECORATIONS — END ===== */
+
+/* ===== SECTION 6 HEADING STYLES — START ===== */
+.section6-heading-wrapper {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(410px, 57vw, 850px);
+    max-width: 92vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 8;
+    pointer-events: none;
+    user-select: none;
+}
+
+.section6-heading-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 25px rgba(244, 208, 104, 0.35));
+}
+
+@media (max-width: 768px) {
+    .section6-heading-wrapper {
+        top: 38%;
+        width: clamp(285px, 80vw, 520px);
+        max-width: 94vw;
+    }
+}
+/* ===== SECTION 6 HEADING STYLES — END ===== */
+
+/* ===== SECTION 6 SCATTERED VIDEO CARDS & OVERLAY VIEWERS — START ===== */
+.sec6-videos-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 6;
+}
+
+.sec6-video-card {
+    position: absolute;
+    width: clamp(115px, 13vw, 175px);
+    height: auto;
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid rgba(244, 208, 104, 0.45);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), 0 0 15px rgba(244, 208, 104, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    will-change: transform;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.sec6-video-card:hover {
+    transform: scale(1.08) !important;
+    border-color: rgba(244, 208, 104, 0.9);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(244, 208, 104, 0.5);
+    z-index: 20 !important;
+}
+
+.sec6-card-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+}
+
+/* Floating animation for video cards */
+@keyframes sec6CardFloat {
+    0% { transform: translateY(0px) rotate(var(--card-rotate, 0deg)); }
+    50% { transform: translateY(-6px) rotate(calc(var(--card-rotate, 0deg) + 0.8deg)); }
+    100% { transform: translateY(0px) rotate(var(--card-rotate, 0deg)); }
+}
+
+.sec6-video-card.float-active {
+    animation: sec6CardFloat 4.5s ease-in-out infinite alternate;
+}
+
+/* Centered In-Page Video Overlay Viewer Modal */
+.sec6-video-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.35s ease-out;
+}
+
+.sec6-video-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.sec6-overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.sec6-overlay-content {
+    position: relative;
+    z-index: 10;
+    max-width: 88vw;
+    max-height: 84vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(22, 17, 12, 0.95);
+    border: 2px solid rgba(244, 208, 104, 0.6);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(244, 208, 104, 0.35);
+    transform: scale(0.88);
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.sec6-video-overlay.active .sec6-overlay-content {
+    transform: scale(1);
+}
+
+.sec6-overlay-video {
+    max-width: 82vw;
+    max-height: 74vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
+    outline: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.sec6-overlay-close-btn {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f4d068 0%, #b8860b 100%);
+    color: #1a233a;
+    border: 2px solid #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), 0 0 15px rgba(244, 208, 104, 0.6);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 20;
+}
+
+.sec6-overlay-close-btn:hover {
+    transform: scale(1.12);
+    background: linear-gradient(135deg, #ffe89e 0%, #f4d068 100%);
+}
+
+@media (max-width: 768px) {
+    .sec6-video-card {
+        width: clamp(75px, 22vw, 110px);
+    }
+    .sec6-overlay-content {
+        max-width: 94vw;
+        max-height: 82vh;
+        padding: 10px;
+    }
+    .sec6-overlay-video {
+        max-width: 90vw;
+        max-height: 72vh;
+    }
+    .sec6-overlay-close-btn {
+        top: -14px;
+        right: -14px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+}
+/* ===== SECTION 6 SCATTERED VIDEO CARDS & OVERLAY VIEWERS — END ===== */
+
+/* ===== SECTION 7 INITIAL CAKE SETUP & HEADLINE PLACEHOLDER — START ===== */
+.section7-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 6;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 0.2vh;
+    padding-top: 2vh;
+}
+
+/* Dedicated Headline Area Directly Above Cake (HERO HEADLINE — SUBSTANTIALLY ENLARGED) */
+.section7-headline-placeholder {
+    width: clamp(780px, 96vw, 1750px);
+    max-width: 98vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9;
+    margin-bottom: clamp(4px, 1vh, 14px);
+    flex-shrink: 0;
+}
+
+.section7-headline-img {
+    width: 100%;
+    height: auto;
+    max-height: 42vh;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 25px rgba(244, 210, 110, 0.25));
+    user-select: none;
+}
+
+/* Independent Cake Wrapper (Horizontally Centered & Anchored Near Bottom Edge - LOCKED) */
+.section7-cake-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 8;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+/* Soft Diffuse Golden Aura Behind Cake */
+.section7-cake-aura {
+    position: absolute;
+    bottom: -5%;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    width: clamp(350px, 50vw, 750px);
+    height: clamp(350px, 50vw, 750px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 120, 0.28) 0%, rgba(244, 185, 64, 0.12) 45%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+    z-index: 7;
+    filter: blur(25px);
+    will-change: transform, opacity;
+}
+
+/* Cake Image (Visually Dominant, Size Unchanged, Anchored to Bottom Edge - LOCKED) */
+.section7-cake-img {
+    position: relative;
+    z-index: 8;
+    width: clamp(440px, 58vw, 880px);
+    max-width: 92vw;
+    max-height: 56vh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 35px rgba(244, 208, 104, 0.35));
+    user-select: none;
+    transform-origin: center bottom;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+@media (max-width: 768px) {
+    .section7-headline-placeholder {
+        width: 98vw;
+        margin-bottom: 6px;
+    }
+    .section7-headline-img {
+        max-height: 34vh;
+    }
+    .section7-cake-img {
+        width: clamp(300px, 86vw, 560px);
+        max-width: 94vw;
+        max-height: 54vh;
+    }
+    .section7-cake-aura {
+        width: 80vw;
+        height: 80vw;
+    }
+}
+
+/* Dedicated Section 7 Magical Fireflies / Particles Layer */
+.section7-particles-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.section7-firefly {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 238, 175, 1) 0%, rgba(245, 195, 75, 0.8) 45%, rgba(245, 195, 75, 0) 100%);
+    box-shadow: 0 0 8px rgba(255, 215, 110, 0.85), 0 0 16px rgba(245, 190, 70, 0.45);
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+}
+
+/* Dedicated Section 7 Balloons Layer (Depth & Perimeter Framing) */
+.section7-balloons-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+    overflow: hidden;
+}
+
+.section7-balloon-item {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.4));
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    z-index: 4;
+}
+
+.section7-balloon-item.is-foreground {
+    z-index: 10;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.5));
+}
+
+.section7-balloon-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+}
+
+/* ===== SECTION 8 FULL-SCREEN MAGICAL NOTE OVERLAY — START ===== */
+.section7-note-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 300;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.section7-note-overlay.is-active {
+    display: flex;
+    pointer-events: auto;
+}
+
+.section7-note-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(15, 12, 5, 0.88) 0%, rgba(5, 4, 2, 0.96) 100%);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
+
+.section7-note-overlay.is-active .section7-note-backdrop {
+    opacity: 1;
+}
+
+.section7-note-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(90vw, 1400px);
+    max-width: 92vw;
+    height: 88vh;
+    max-height: 88vh;
+    opacity: 0;
+    transform: scale(0.94);
+    will-change: opacity, transform;
+    box-sizing: border-box;
+}
+
+/* Header bar containing floating zoom controls and close button */
+.section7-note-header-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    z-index: 25;
+    pointer-events: auto;
+    flex-shrink: 0;
+}
+
+.section7-note-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(20, 15, 30, 0.85);
+    border: 1.5px solid rgba(255, 215, 0, 0.45);
+    border-radius: 30px;
+    padding: 4px 14px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 215, 0, 0.25);
+}
+
+.section7-note-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffd700;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.section7-note-btn:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: #ffd700;
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+.section7-note-zoom-level {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 44px;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    user-select: none;
+}
+
+.section7-note-close-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 215, 0, 0.4);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.section7-note-close-btn:hover {
+    transform: scale(1.12);
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* Dedicated internal scrolling viewport area */
+.section7-note-scroll-viewer {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 52px);
+    max-height: calc(88vh - 52px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 16px;
+    box-sizing: border-box;
+    padding: 6px 0;
+}
+
+/* Custom golden-themed scrollbar for the note viewer */
+.section7-note-scroll-viewer::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.section7-note-scroll-viewer::-webkit-scrollbar-track {
+    background: rgba(10, 8, 15, 0.6);
+    border-radius: 8px;
+}
+
+.section7-note-scroll-viewer::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d4af37, #fef08a);
+    border-radius: 8px;
+    border: 2px solid rgba(10, 8, 15, 0.6);
+}
+
+.section7-note-scroll-viewer::-webkit-scrollbar-thumb:hover {
+    background: #ffffff;
+}
+
+/* Stage that transforms / scales during zoom */
+.section7-note-img-stage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    transform-origin: top center;
+    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+.section7-note-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    user-select: none;
+    filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.35));
+}
+
+@media (max-width: 768px) {
+    .section7-note-wrapper {
+        width: 95vw;
+        max-width: 95vw;
+        height: 85vh;
+        max-height: 85vh;
+    }
+    .section7-note-close-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 22px;
+    }
+    .section7-note-controls {
+        padding: 2px 10px;
+        gap: 6px;
+    }
+    .section7-note-btn {
+        font-size: 13px;
+        padding: 3px 8px;
+    }
+}
+/* ===== SECTION 8 FULL-SCREEN MAGICAL NOTE OVERLAY — END ===== */
+
+/* ===== SECTION 8 - SCOPED LAYOUT & ROPE REMOVAL ===== */
+#gardenSegment-8 {
+    padding: 0 !important;
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+#gardenSegment-8 .segment-rope-anchor,
+#gardenSegment-8 .rope-clip-anchor {
+    display: none !important;
+}
+
+/* ===== SECTION 8 HEADING STYLES — START ===== */
+#gardenSegment-8 .section8-container {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
+#gardenSegment-8 .section8-heading-wrapper {
+    position: absolute !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+    width: 66vw !important;
+    max-width: 66vw !important;
+    height: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+#gardenSegment-8 .section8-heading-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+    vertical-align: top !important;
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 25px rgba(244, 208, 104, 0.35)) !important;
+}
+
+@media (max-width: 768px) {
+    #gardenSegment-8 .section8-heading-wrapper {
+        top: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        width: 86vw !important;
+        max-width: 86vw !important;
+    }
+}
+/* ===== SECTION 8 HEADING STYLES — END ===== */
+
+/* ===== SECTION 8 ROSE SUBJECT STYLES — START ===== */
+#gardenSegment-8 .section8-rose-wrapper {
+    position: absolute !important;
+    top: 50.5vh !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 24.5vw !important;
+    max-width: 24.5vw !important;
+    height: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+#gardenSegment-8 .section8-rose-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 20px rgba(255, 182, 193, 0.3)) !important;
+}
+
+@media (max-width: 768px) {
+    #gardenSegment-8 .section8-rose-wrapper {
+        top: 46vh !important;
+        width: 43vw !important;
+        max-width: 43vw !important;
+    }
+}
+/* ===== SECTION 8 ROSE SUBJECT STYLES — END ===== */
+
+/* ===== SECTION 8 ROSE TEXT STYLES — START ===== */
+#gardenSegment-8 .section8-text-wrapper {
+    position: absolute !important;
+    top: 82.5vh !important;
+    left: 71% !important;
+    transform: translateX(-50%) !important;
+    width: 17vw !important;
+    max-width: 17vw !important;
+    height: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    opacity: 0;
+}
+
+#gardenSegment-8 .section8-text-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 20px rgba(255, 182, 193, 0.35)) !important;
+}
+
+@media (max-width: 768px) {
+    #gardenSegment-8 .section8-text-wrapper {
+        top: 84vh !important;
+        left: 50% !important;
+        width: 40vw !important;
+        max-width: 40vw !important;
+    }
+}
+/* ===== SECTION 8 ROSE TEXT STYLES — END ===== */
+
+/* ===== SECTION 8 MAGICAL PINK REVEAL OVERLAY — START ===== */
+.section8-pink-light-takeover {
+    position: absolute;
+    top: 50.5vh;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.01);
+    width: 140vw;
+    height: 140vw;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 192, 203, 0.98) 0%, rgba(255, 105, 180, 0.92) 45%, rgba(199, 21, 133, 0.96) 80%, rgba(139, 0, 139, 0) 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    filter: blur(12px);
+    box-shadow: 0 0 100px rgba(255, 105, 180, 0.8);
+    will-change: transform, opacity;
+}
+
+.section8-pink-rays {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 182, 193, 0.6) 0%, rgba(255, 20, 147, 0.3) 60%, transparent 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 51;
+    mix-blend-mode: screen;
+}
+
+.section8-reveal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.section8-reveal-overlay.is-active {
+    display: flex;
+    pointer-events: auto;
+}
+
+.section8-pink-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 182, 193, 0.95) 0%, rgba(255, 105, 180, 0.92) 50%, rgba(199, 21, 133, 0.96) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.4);
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.section8-reveal-overlay.is-active .section8-pink-backdrop {
+    opacity: 1;
+}
+
+.section8-funny-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: min(73vw, 650px);
+    max-height: 80vh;
+    margin-top: -5vh;
+    opacity: 0;
+    transform: scale(0.95);
+    will-change: opacity, transform;
+}
+
+.section8-funny-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 54vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 16px;
+    user-select: none;
+    box-shadow: 0 20px 50px rgba(100, 10, 50, 0.65), 0 0 35px rgba(255, 255, 255, 0.5);
+    border: 3.5px solid rgba(255, 255, 255, 0.85);
+}
+
+.section8-last-text-wrapper {
+    margin-top: 2.2vh;
+    width: 82%;
+    max-width: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section8-last-text-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+}
+
+@media (max-width: 768px) {
+    .section8-funny-wrapper {
+        max-width: 82vw;
+        max-height: 75vh;
+        margin-top: -4vh;
+    }
+    .section8-funny-img {
+        max-height: 48vh;
+    }
+    .section8-last-text-wrapper {
+        margin-top: 1.8vh;
+        width: 90%;
+        max-width: 320px;
+    }
+}
+/* ===== SECTION 8 MAGICAL PINK REVEAL OVERLAY — END ===== */
+
+/* ===== TEMPORARY SECOND FRONTEND BACKGROUND FILTER — START ===== */
+
+.garden-bg-layer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    backdrop-filter: blur(3px) brightness(0.86);
+    -webkit-backdrop-filter: blur(3px) brightness(0.86);
+    background: rgba(10, 8, 4, 0.16);
+    pointer-events: none;
+}
+
+/* ===== TEMPORARY SECOND FRONTEND BACKGROUND FILTER — END ===== */

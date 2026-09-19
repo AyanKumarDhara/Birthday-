@@ -1,0 +1,592 @@
+// ==========================================================================
+// MODULAR CINEMATIC TRANSITION CONFIGURATION
+// Easily adjust any parameter here to tune timing, speed, and intensity
+// ==========================================================================
+const CONFIG = {
+    cameraZoomScale: 1.12,          // Subtle cinematic push (10–12%) keeping castle architecture visible
+    cameraZoomDuration: 2800,       // Duration of camera push (ms)
+    whirlpoolSpeed: 1.0,            // Swirl rotation speed multiplier
+    whirlpoolIntensity: 1.0,        // Portal energy brightness & opacity multiplier
+    particleAmount: 55,             // Outward golden particle density
+    portalGlowIntensity: 1.0,       // Doorway bloom glow intensity
+    energyExpansionDuration: 1800,  // Duration of energy escape phase (ms)
+    goldenTakeoverDuration: 1500    // Duration of full-screen golden takeover (ms)
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --------------------------------------------------------------------------
+    // DOM Elements
+    // --------------------------------------------------------------------------
+    const stage = document.getElementById('stage');
+    const candleWrapper = document.getElementById('candleWrapper');
+    const scrollLayer = document.getElementById('scrollLayer');
+    const dogLeft = document.getElementById('dogLeft');
+    const dogRight = document.getElementById('dogRight');
+    
+    // Portal Elements (Feathered, transparent energy layers over doorway)
+    const goldenPortalWrapper = document.getElementById('goldenPortalWrapper');
+    const whirlpool1 = document.getElementById('whirlpool1');
+    const whirlpool2 = document.getElementById('whirlpool2');
+    const portalGlowCore = document.getElementById('portalGlowCore');
+    
+    // Canvases
+    const magicEnergyCanvas = document.getElementById('magicEnergyCanvas');
+    const sparkleCanvas = document.getElementById('sparkleCanvas');
+    const goldenLightTakeover = document.getElementById('goldenLightTakeover');
+
+    const ctx = sparkleCanvas ? sparkleCanvas.getContext('2d') : null;
+    const magicCtx = magicEnergyCanvas ? magicEnergyCanvas.getContext('2d') : null;
+
+    let isLit = true;
+    let isBlownOut = false;
+    let transitionStarted = false;
+    
+    // Particles state
+    let particles = [];
+    let magicParticles = [];
+    let portalParticles = [];
+    let magicStreaming = false;
+    let portalSwirling = false;
+    let energyEscaping = false;
+
+    // Responsive Canvas Resize
+    function resizeCanvas() {
+        if (candleWrapper && sparkleCanvas) {
+            sparkleCanvas.width = sparkleCanvas.clientWidth;
+            sparkleCanvas.height = sparkleCanvas.clientHeight;
+        }
+        if (magicEnergyCanvas && stage) {
+            magicEnergyCanvas.width = stage.clientWidth;
+            magicEnergyCanvas.height = stage.clientHeight;
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // --------------------------------------------------------------------------
+    // Audio Synthesizers (Web Audio API for realistic air blow)
+    // --------------------------------------------------------------------------
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playBlowSound() {
+        try {
+            const ac = getAudioCtx();
+            const now = ac.currentTime;
+            const bufferSize = ac.sampleRate * 0.35;
+            const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = ac.createBufferSource();
+            noise.buffer = buffer;
+            const filter = ac.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(650, now);
+            filter.frequency.exponentialRampToValueAtTime(120, now + 0.35);
+
+            const gain = ac.createGain();
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.005, now + 0.35);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ac.destination);
+
+            noise.start(now);
+            noise.stop(now + 0.35);
+        } catch (e) {}
+    }
+
+    // --------------------------------------------------------------------------
+    // Interactive Candle Trigger
+    // --------------------------------------------------------------------------
+    candleWrapper.addEventListener('click', blowOutCandleAndStartTransition);
+    candleWrapper.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            blowOutCandleAndStartTransition();
+        }
+    });
+
+    // --------------------------------------------------------------------------
+    // 6-PHASE CINEMATIC TRANSITION SEQUENCE (Powered by Anime.js 4.5.0)
+    // --------------------------------------------------------------------------
+    function blowOutCandleAndStartTransition() {
+        if (transitionStarted || isBlownOut || !isLit) return; // Interaction lock
+
+        transitionStarted = true;
+        isBlownOut = true;
+        isLit = false;
+
+        // PHASE 1 — INTRO EXIT: Candle Blowout & Natural Smoke from Burnt Wick
+        playBlowSound();
+        candleWrapper.classList.add('blowing');
+
+        // Extinguish flame: burnt wick on candleBase remains visible & smoke curls up
+        setTimeout(() => {
+            candleWrapper.classList.remove('blowing');
+            candleWrapper.classList.remove('lit');
+            spawnSoftMistPuff(25);
+        }, 180);
+
+        // Build Master Animation Timeline using Anime.js
+        const animeLib = window.anime;
+
+        // Timeline: Fade out parchment and dogs
+        setTimeout(() => {
+            if (animeLib && animeLib.animate) {
+                animeLib.animate([scrollLayer, dogLeft, dogRight, candleWrapper], {
+                    opacity: [1, 0],
+                    duration: 800,
+                    ease: 'outQuad',
+                    onComplete: () => {
+                        if (scrollLayer) scrollLayer.style.display = 'none';
+                        if (dogLeft) dogLeft.style.display = 'none';
+                        if (dogRight) dogRight.style.display = 'none';
+                        if (candleWrapper) candleWrapper.style.display = 'none';
+                    }
+                });
+            } else {
+                [scrollLayer, dogLeft, dogRight, candleWrapper].forEach(el => {
+                    if (el) el.classList.add('fading');
+                });
+                setTimeout(() => {
+                    [scrollLayer, dogLeft, dogRight, candleWrapper].forEach(el => {
+                        if (el) el.style.display = 'none';
+                    });
+                }, 800);
+            }
+        }, 750);
+
+        // PHASE 2 & 3 — SUBTLE CAMERA PUSH & GOLDEN PORTAL COMES ALIVE (t = 1550ms)
+        setTimeout(() => {
+            // PHASE 2: Subtle cinematic camera push (10–12% max)
+            if (animeLib && animeLib.animate) {
+                animeLib.animate(stage, {
+                    scale: CONFIG.cameraZoomScale,
+                    duration: CONFIG.cameraZoomDuration,
+                    ease: 'inOutQuad'
+                });
+            } else {
+                stage.classList.add('zooming');
+            }
+
+            // PHASE 3: Golden portal awakens (Feathered swirling vortex & soft bloom)
+            if (goldenPortalWrapper) {
+                if (animeLib && animeLib.animate) {
+                    animeLib.animate(goldenPortalWrapper, {
+                        opacity: [0, CONFIG.whirlpoolIntensity * 0.95],
+                        duration: 1200,
+                        ease: 'inOutQuad'
+                    });
+
+                    // Whirlpool rotation: Layer 1 rotates clockwise, Layer 2 counter-clockwise
+                    animeLib.animate(whirlpool1, {
+                        rotate: '360deg',
+                        duration: 5000 / CONFIG.whirlpoolSpeed,
+                        loop: true,
+                        ease: 'linear'
+                    });
+
+                    animeLib.animate(whirlpool2, {
+                        rotate: '-360deg',
+                        duration: 4200 / CONFIG.whirlpoolSpeed,
+                        loop: true,
+                        ease: 'linear'
+                    });
+
+                    // Core breathing pulse
+                    animeLib.animate(portalGlowCore, {
+                        scale: [1, 1.15],
+                        opacity: [0.85, 1 * CONFIG.portalGlowIntensity],
+                        duration: 1400,
+                        loop: true,
+                        alternate: true,
+                        ease: 'inOutQuad'
+                    });
+                } else {
+                    goldenPortalWrapper.style.opacity = '0.95';
+                }
+            }
+
+            // Swirling portal energy particles inside doorway
+            portalSwirling = true;
+            startPortalSwirlStream();
+        }, 1550);
+
+        // PHASE 4 — ENERGY ESCAPE: Whirlpool Accelerates & Magic Streams Outward (t = 3200ms)
+        setTimeout(() => {
+            energyEscaping = true;
+
+            // Intensify whirlpool rotation and brightness
+            if (animeLib && animeLib.animate && goldenPortalWrapper) {
+                animeLib.animate(goldenPortalWrapper, {
+                    scale: [1, 1.25],
+                    filter: ['blur(0px) brightness(1)', 'blur(2px) brightness(1.35)'],
+                    duration: CONFIG.energyExpansionDuration,
+                    ease: 'inQuad'
+                });
+            }
+
+            // Start stream of particles/wisps escaping into the courtyard toward viewer
+            startEscapingEnergyStream();
+        }, 3200);
+
+        // PHASE 5 — FULL-SCREEN GOLDEN LIGHT TAKEOVER (t = 4600ms)
+        setTimeout(() => {
+            if (goldenLightTakeover) {
+                if (animeLib && animeLib.animate) {
+                    animeLib.animate(goldenLightTakeover, {
+                        scale: [0.01, 3.5],
+                        opacity: [0, 1],
+                        duration: CONFIG.goldenTakeoverDuration,
+                        ease: 'inQuad'
+                    });
+                } else {
+                    goldenLightTakeover.classList.add('expanding');
+                }
+            }
+        }, 4600);
+
+        // PHASE 6 — FUTURE PAGE HANDOFF (t = 6200ms)
+        setTimeout(() => {
+            // Viewport is now 100% covered in warm golden-white light
+            portalSwirling = false;
+            energyEscaping = false;
+
+            if (typeof window.onGateTransitionComplete === 'function') {
+                window.onGateTransitionComplete();
+            }
+        }, 6200);
+    }
+
+    // Default clean callback hook
+    if (!window.onGateTransitionComplete) {
+        window.onGateTransitionComplete = function() {
+            console.log("Gate transition complete: golden-white light takeover finished.");
+            window.__gateCallbackFired = true;
+        };
+    }
+
+    // --------------------------------------------------------------------------
+    // Particle Classes (Smoke, Swirling Wisps & Escaping Golden Magic)
+    // --------------------------------------------------------------------------
+
+    // Soft Mist Particle for Burnt Candle Wick Smoke
+    class SoftMistParticle {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * 6;
+            this.y = cy;
+            this.size = Math.random() * 4 + 3;
+            this.maxSize = this.size + Math.random() * 14 + 10;
+            this.vx = (Math.random() - 0.5) * 0.45;
+            this.vy = -(Math.random() * 1.2 + 0.6);
+            this.alpha = Math.random() * 0.35 + 0.3;
+            this.decay = Math.random() * 0.007 + 0.005;
+            this.driftOffset = Math.random() * 100;
+            const greys = [
+                '220, 220, 230',
+                '235, 235, 245',
+                '245, 240, 230'
+            ];
+            this.rgb = greys[Math.floor(Math.random() * greys.length)];
+        }
+
+        update() {
+            this.x += this.vx + Math.sin(this.y * 0.08 + this.driftOffset) * 0.3;
+            this.y += this.vy;
+            if (this.size < this.maxSize) this.size += 0.12;
+            this.alpha -= this.decay;
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+
+            const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            grad.addColorStop(0, `rgba(${this.rgb}, 0.75)`);
+            grad.addColorStop(0.4, `rgba(${this.rgb}, 0.35)`);
+            grad.addColorStop(0.85, `rgba(${this.rgb}, 0.08)`);
+            grad.addColorStop(1, `rgba(${this.rgb}, 0)`);
+
+            c.fillStyle = grad;
+            c.beginPath();
+            c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    function spawnSoftMistPuff(count = 25) {
+        if (!sparkleCanvas) return;
+        const cx = sparkleCanvas.width * 0.5;
+        const cy = sparkleCanvas.height * 0.20;
+
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                particles.push(new SoftMistParticle(cx, cy));
+            }, i * 22);
+        }
+    }
+
+    // Portal Swirl Particle (Phase 3: Concentrated inside the doorway vortex)
+    class PortalSwirlParticle {
+        constructor(cx, cy) {
+            this.cx = cx;
+            this.cy = cy;
+            this.radius = Math.random() * (magicEnergyCanvas ? magicEnergyCanvas.width * 0.07 : 50) + 5;
+            this.angle = Math.random() * Math.PI * 2;
+            this.speed = (Math.random() * 0.035 + 0.02) * CONFIG.whirlpoolSpeed;
+            this.size = Math.random() * 2.2 + 1.2;
+            this.alpha = 0.1;
+            this.maxAlpha = Math.random() * 0.6 + 0.35;
+            this.fadeIn = true;
+            this.decay = Math.random() * 0.008 + 0.004;
+            const colors = ['#ffffff', '#fffbeb', '#fef08a', '#fde047', '#fbbf24'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+            this.angle += this.speed;
+            this.radius = Math.max(2, this.radius - 0.25); // Gentle inward spiral pull
+
+            if (this.fadeIn) {
+                this.alpha += 0.04;
+                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+            } else {
+                this.alpha -= this.decay;
+            }
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            const px = this.cx + Math.cos(this.angle) * this.radius;
+            // Elliptical arch ratio
+            const py = this.cy + Math.sin(this.angle) * (this.radius * 1.6);
+
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+            c.fillStyle = this.color;
+            c.shadowColor = '#fbbf24';
+            c.shadowBlur = 10;
+            c.beginPath();
+            c.arc(px, py, this.size, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    // Escaping Golden Particle (Phase 4: Breaks out of doorway toward viewer)
+    class EscapingGoldenParticle {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.width * 0.09 : 70);
+            this.y = cy + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.height * 0.24 : 140);
+
+            const angle = Math.atan2(this.y - cy, this.x - cx) + (Math.random() - 0.5) * 0.75;
+            const speed = Math.random() * 1.8 + 1.0;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed + (Math.random() - 0.5) * 0.4;
+
+            this.baseSize = Math.random() * 2.0 + 1.2;
+            this.scale = 0.5;
+            this.growth = Math.random() * 0.04 + 0.025; // 3D perspective growth
+
+            this.alpha = 0.1;
+            this.maxAlpha = Math.random() * 0.6 + 0.4;
+            this.fadeIn = true;
+            this.decay = Math.random() * 0.009 + 0.005;
+
+            const colors = ['#ffffff', '#fffdf0', '#fef08a', '#fde047', '#fbbf24', '#f59e0b'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.driftPhase = Math.random() * Math.PI * 2;
+            this.driftSpeed = Math.random() * 0.06 + 0.03;
+        }
+
+        update() {
+            this.scale += this.growth;
+            this.x += this.vx * (1 + this.scale * 0.85);
+            this.y += this.vy * (1 + this.scale * 0.85) + Math.sin(this.driftPhase) * 0.4;
+            this.driftPhase += this.driftSpeed;
+
+            if (this.fadeIn) {
+                this.alpha += 0.05;
+                if (this.alpha >= this.maxAlpha) this.fadeIn = false;
+            } else {
+                this.alpha -= this.decay;
+            }
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+
+            const r = this.baseSize * this.scale;
+            c.fillStyle = this.color;
+            c.shadowColor = '#fbbf24';
+            c.shadowBlur = Math.min(24, 7 * this.scale);
+
+            c.beginPath();
+            c.arc(this.x, this.y, r, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    // Delicate Golden Wisp Ribbon (Phase 4: Curving energy streak escaping portal)
+    class EscapingWispRibbon {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.width * 0.06 : 50);
+            this.y = cy + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.height * 0.18 : 100);
+            this.points = [{ x: this.x, y: this.y }];
+            this.maxPoints = Math.floor(Math.random() * 12 + 10);
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 2.0 + 1.2;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.curve = (Math.random() - 0.5) * 0.09;
+
+            this.width = Math.random() * 2.2 + 1.4;
+            this.scale = 0.6;
+            this.alpha = 0.85;
+            this.decay = Math.random() * 0.012 + 0.008;
+            this.color = Math.random() > 0.4 ? '#fef08a' : '#ffffff';
+        }
+
+        update() {
+            this.scale += 0.026;
+            const vxNew = this.vx * Math.cos(this.curve) - this.vy * Math.sin(this.curve);
+            const vyNew = this.vx * Math.sin(this.curve) + this.vy * Math.cos(this.curve);
+            this.vx = vxNew;
+            this.vy = vyNew;
+
+            this.x += this.vx * (1 + this.scale * 0.75);
+            this.y += this.vy * (1 + this.scale * 0.75);
+
+            this.points.unshift({ x: this.x, y: this.y });
+            if (this.points.length > this.maxPoints) {
+                this.points.pop();
+            }
+            this.alpha -= this.decay;
+        }
+
+        draw(c) {
+            if (this.alpha <= 0 || this.points.length < 2) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+            c.strokeStyle = this.color;
+            c.lineWidth = this.width * this.scale;
+            c.lineCap = 'round';
+            c.shadowColor = '#f59e0b';
+            c.shadowBlur = 12;
+
+            c.beginPath();
+            c.moveTo(this.points[0].x, this.points[0].y);
+            for (let i = 1; i < this.points.length; i++) {
+                c.lineTo(this.points[i].x, this.points[i].y);
+            }
+            c.stroke();
+            c.restore();
+        }
+    }
+
+    // Portal stream loops
+    function startPortalSwirlStream() {
+        if (!magicEnergyCanvas) return;
+        const cx = magicEnergyCanvas.width * 0.5;
+        const cy = magicEnergyCanvas.height * 0.532;
+
+        const swirlInterval = setInterval(() => {
+            if (!portalSwirling) {
+                clearInterval(swirlInterval);
+                return;
+            }
+            for (let i = 0; i < 3; i++) {
+                portalParticles.push(new PortalSwirlParticle(cx, cy));
+            }
+        }, 70);
+    }
+
+    function startEscapingEnergyStream() {
+        if (!magicEnergyCanvas) return;
+        const cx = magicEnergyCanvas.width * 0.5;
+        const cy = magicEnergyCanvas.height * 0.532;
+
+        const streamInterval = setInterval(() => {
+            if (!energyEscaping) {
+                clearInterval(streamInterval);
+                return;
+            }
+            for (let i = 0; i < 4; i++) {
+                magicParticles.push(new EscapingGoldenParticle(cx, cy));
+            }
+            if (Math.random() < 0.45) {
+                magicParticles.push(new EscapingWispRibbon(cx, cy));
+            }
+        }, 55);
+
+        setTimeout(() => {
+            energyEscaping = false;
+        }, CONFIG.energyExpansionDuration);
+    }
+
+    // --------------------------------------------------------------------------
+    // Main Animation Rendering Loop
+    // --------------------------------------------------------------------------
+    function animate() {
+        // Render candle smoke particles
+        if (ctx && sparkleCanvas) {
+            ctx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw(ctx);
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        // Render magical portal & escaping energy particles
+        if (magicCtx && magicEnergyCanvas) {
+            magicCtx.clearRect(0, 0, magicEnergyCanvas.width, magicEnergyCanvas.height);
+
+            // 1. Swirling portal particles
+            for (let i = portalParticles.length - 1; i >= 0; i--) {
+                const p = portalParticles[i];
+                p.update();
+                p.draw(magicCtx);
+                if (p.alpha <= 0 || p.radius <= 3) {
+                    portalParticles.splice(i, 1);
+                }
+            }
+
+            // 2. Escaping golden embers and wisps
+            for (let i = magicParticles.length - 1; i >= 0; i--) {
+                const p = magicParticles[i];
+                p.update();
+                p.draw(magicCtx);
+                if (p.alpha <= 0) {
+                    magicParticles.splice(i, 1);
+                }
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+});

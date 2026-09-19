@@ -1,0 +1,354 @@
+/* ==========================================================================
+   ROYAL MAGICAL BIRTHDAY - 5-LAYER INDEPENDENT TRANSITION STYLES
+   ========================================================================== */
+
+:root {
+    --primary-gold: #f4d068;
+    --gold-glow: #ffe89e;
+    --dark-gold: #b8860b;
+    --royal-blue: #1a233a;
+    --scroll-heading: #7c2d12;
+    
+    --font-heading: 'Cinzel Decorative', cursive, serif;
+    --font-script: 'Great Vibes', cursive;
+    --font-body: 'Outfit', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: #0d1117;
+    color: #f8fafc;
+    min-height: 100vh;
+    user-select: none;
+}
+
+body.lock-scroll {
+    overflow: hidden !important;
+}
+
+/* --------------------------------------------------------------------------
+   STAGE WRAPPER & CAMERA PUSH
+   -------------------------------------------------------------------------- */
+.scene-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #0d1117;
+}
+
+.stage {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    aspect-ratio: 16 / 9;
+    max-height: 100vh;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    transform-origin: 50% 53%;
+    transition: transform 3.0s cubic-bezier(0.25, 1, 0.35, 1);
+    will-change: transform;
+}
+
+/* Subtle cinematic camera push-in of ~12% (keeping full castle architecture clearly visible) */
+.stage.zooming {
+    transform: scale(1.12);
+}
+
+.layer {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   1. STATIONARY CASTLE BACKGROUND (Z-INDEX 1)
+   -------------------------------------------------------------------------- */
+.bg-layer {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   2. GOLDEN PORTAL WHIRLPOOL (Z-INDEX 4 - Feathered transparent blend over doorway)
+   -------------------------------------------------------------------------- */
+.golden-portal-wrapper {
+    position: absolute;
+    left: 49.8%;
+    top: 53.0%;
+    width: 21.6%;
+    height: 59.8%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    mix-blend-mode: screen;
+    overflow: hidden;
+    border-radius: 50% 50% 12% 12% / 40% 40% 12% 12%;
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 65%, transparent 98%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 65%, transparent 98%);
+}
+
+/* Layered swirling energy vortices */
+.portal-whirlpool {
+    position: absolute;
+    inset: -25%;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.whirlpool-layer-1 {
+    background: conic-gradient(
+        from 0deg,
+        rgba(255, 255, 255, 0.95) 0deg,
+        rgba(254, 240, 138, 0.85) 45deg,
+        rgba(251, 191, 36, 0.5) 100deg,
+        rgba(245, 158, 11, 0.1) 160deg,
+        transparent 190deg,
+        rgba(254, 240, 138, 0.7) 270deg,
+        rgba(255, 255, 255, 0.95) 360deg
+    );
+    filter: blur(14px);
+    opacity: 0.85;
+}
+
+.whirlpool-layer-2 {
+    inset: -15%;
+    background: conic-gradient(
+        from 180deg,
+        rgba(255, 255, 255, 0.9) 0deg,
+        rgba(253, 224, 71, 0.75) 55deg,
+        rgba(245, 158, 11, 0.25) 110deg,
+        transparent 180deg,
+        rgba(254, 240, 138, 0.8) 290deg,
+        rgba(255, 255, 255, 0.9) 360deg
+    );
+    filter: blur(16px);
+    opacity: 0.75;
+}
+
+.portal-glow-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 90%;
+    height: 90%;
+    transform: translate(-50%, -50%);
+    border-radius: 50% 50% 30% 30%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(254, 240, 138, 0.85) 35%,
+        rgba(251, 191, 36, 0.5) 60%,
+        rgba(245, 158, 11, 0.1) 78%,
+        transparent 88%
+    );
+    filter: blur(12px);
+    opacity: 0.9;
+    will-change: transform, opacity;
+}
+
+/* --------------------------------------------------------------------------
+   3. MAGICAL ENERGY & PARTICLES CANVAS (Z-INDEX 10)
+   -------------------------------------------------------------------------- */
+.magic-energy-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   5. DOGS / CANDLE / SCROLL (Z-INDEX 25+ Foreground)
+   -------------------------------------------------------------------------- */
+.scroll-layer {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 25;
+    transition: opacity 0.8s ease-out;
+}
+
+.puppy-left {
+    left: 28.8%;
+    top: 38.88%;
+    width: 17.09%;
+    height: 73.2%;
+    object-fit: contain;
+    z-index: 26;
+    transition: opacity 0.8s ease-out;
+}
+
+.puppy-right {
+    left: 46.875%;
+    top: 62.7%;
+    width: 30.08%;
+    height: 33.45%;
+    object-fit: contain;
+    z-index: 27;
+    transition: opacity 0.8s ease-out;
+}
+
+/* INTERACTIVE CANDLE & FLAME (Z-INDEX 28) */
+.candle-wrapper {
+    position: absolute;
+    left: 47.65%;
+    top: 59.54%;
+    width: 4.59%;
+    height: 35.02%;
+    z-index: 28;
+    transition: opacity 0.8s ease-out;
+}
+
+.candle-wrapper.lit {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.candle-wrapper:not(.lit) {
+    cursor: default;
+    pointer-events: none;
+}
+
+.candle-base {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.candle-flame {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: flameFlicker 1.8s infinite ease-in-out;
+    transform-origin: 50% 16%;
+    transition: transform 0.15s ease-out, opacity 0.35s ease-in;
+}
+
+.candle-halo {
+    position: absolute;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 230, 160, 0.75) 0%, rgba(245, 158, 11, 0.35) 45%, transparent 70%);
+    filter: blur(4px);
+    opacity: 0.9;
+    animation: haloPulse 2.5s infinite ease-in-out;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.candle-wrapper.blowing .candle-flame {
+    animation: none;
+    transform: rotate(-14deg) scaleX(1.25) scaleY(0.85);
+}
+
+.candle-wrapper:not(.lit) .candle-flame {
+    animation: none;
+    opacity: 0;
+    transform: translateY(18px) scale(0.05);
+}
+
+.candle-wrapper:not(.lit) .candle-halo {
+    animation: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15);
+}
+
+/* Fading Class for Initial Foreground Scene */
+.layer.fading,
+.candle-wrapper.fading {
+    opacity: 0 !important;
+    transition: opacity 0.8s ease-out !important;
+}
+
+/* Sparkle & Smoke Canvas */
+.sparkle-canvas {
+    position: absolute;
+    top: -60%;
+    left: -200%;
+    width: 500%;
+    height: 300%;
+    pointer-events: none;
+    z-index: 29;
+}
+
+/* --------------------------------------------------------------------------
+   6. GOLDEN LIGHT TAKEOVER (Z-INDEX 100 - Full Viewport Golden-White Illumination)
+   -------------------------------------------------------------------------- */
+.golden-light-takeover {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 160vmax;
+    height: 160vmax;
+    transform: translate(-50%, -50%) scale(0.01);
+    opacity: 0;
+    z-index: 100;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at center,
+        #ffffff 0%,
+        #ffffff 35%,
+        #fffdf2 50%,
+        #fef08a 65%,
+        rgba(253, 224, 71, 0.85) 78%,
+        rgba(245, 158, 11, 0.4) 90%,
+        rgba(245, 158, 11, 0) 100%
+    );
+    pointer-events: none;
+    transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease-in;
+    will-change: transform, opacity;
+}
+
+.golden-light-takeover.expanding {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(3.5) !important;
+}
+
+/* Animations */
+@keyframes flameFlicker {
+    0%, 100% { transform: rotate(0deg) scaleY(1); filter: brightness(1); }
+    25% { transform: rotate(1.2deg) scaleY(1.02) scaleX(0.98); filter: brightness(1.04); }
+    50% { transform: rotate(-1.5deg) scaleY(0.97) scaleX(1.01); filter: brightness(0.96); }
+    75% { transform: rotate(0.8deg) scaleY(1.03) scaleX(0.99); filter: brightness(1.02); }
+}
+
+@keyframes haloPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.98; filter: blur(5px); }
+}

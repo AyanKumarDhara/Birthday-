@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Birthday Scene - Royal Gate Transition</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Great+Vibes&family=Outfit:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Preload Critical Next-World Images & Videos -->
+    <link rel="preload" as="image" href="assets/after_png_main_photo.png">
+    <link rel="preload" as="image" href="assets/final_section_text.png">
+    <link rel="preload" as="video" href="assets/Second frontend.mp4" type="video/mp4">
+    <link rel="preload" as="video" href="assets/dog_2_final.webm" type="video/webm">
+    <link rel="preload" as="video" href="assets/dog_7_final.webm" type="video/webm">
+    <link rel="preload" as="video" href="assets/dog_10.webm" type="video/webm">
+    <link rel="preload" as="video" href="assets/dog_3_final.webm" type="video/webm">
+    <link rel="preload" as="image" href="assets/Frame_image_1-removebg.png">
+    <link rel="preload" as="image" href="assets/Frame_image_9-removebg.png">
+    <link rel="preload" as="image" href="assets/Frame_image_8-removebg.png">
+    <link rel="preload" as="image" href="assets/Frame_image_10-removebg.png">
+    <link rel="preload" as="image" href="assets/Frame_image_13-removebg.png">
+    <link rel="preload" as="image" href="assets/Frame_image_3-removebg.png">
+    <link rel="preload" as="image" href="assets/teddy_02.png">
+    <link rel="preload" as="image" href="assets/teddy_03.png">
+    <link rel="preload" as="image" href="assets/teddy_04.png">
+    <!-- ===== TEMPORARY SECTION 2 BALLOON ASSETS — START ===== -->
+    <link rel="preload" as="image" href="assets/birthday_element/balloon_05_pastel_blue_heart.png">
+    <link rel="preload" as="image" href="assets/birthday_element/balloon_02_gold_round.png">
+    <link rel="preload" as="image" href="assets/corner_balloon/balloon_03.png">
+    <!-- ===== TEMPORARY SECTION 2 BALLOON ASSETS — END ===== -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="lock-scroll">
+    <!-- FIRST FRONTEND BACKGROUND MUSIC (INVISIBLE, 500% GAIN WEB AUDIO API, LOOP) -->
+    <audio id="firstFrontendBgMusic" src="assets/First  Frontend sound.mp4" loop preload="auto" style="display:none;"></audio>
+    <!-- BIRTHDAY REVEAL PAGE CLAPPING AUDIO (INVISIBLE, 500% GAIN WEB AUDIO API, NO LOOP) -->
+    <audio id="clappingAudio" src="assets/Clapping sound.mp4" preload="auto" style="display:none;"></audio>
+    <main class="scene-container" id="sceneContainer">
+        <div class="stage" id="stage">
+            <!-- STATIONARY BACKGROUND: FINALLY THE ROYAL GATE (Z-INDEX 1) -->
+            <img src="assets/Finally the royal gate.png" alt="Royal Gate Background" class="layer bg-layer" id="bgLayer">
+
+            <!-- FIRST FRONTEND CORNER BALLOONS (2 UPPER-LEFT, 2 UPPER-RIGHT - STATIC) -->
+            <div class="first-frontend-balloons-container" id="firstFrontendBalloonsContainer">
+                <img src="assets/corner_balloon/balloon_03.png" class="ff-balloon ff-balloon-top-left-1" alt="Upper Left Balloon 1" />
+                <img src="assets/corner_balloon/balloon_07.png" class="ff-balloon ff-balloon-top-left-2" alt="Upper Left Balloon 2" />
+                <img src="assets/corner_balloon/balloon_12.png" class="ff-balloon ff-balloon-top-right-1" alt="Upper Right Balloon 1" />
+                <img src="assets/corner_balloon/balloon_15.png" class="ff-balloon ff-balloon-top-right-2" alt="Upper Right Balloon 2" />
+            </div>
+
+            <!-- FIRST FRONTEND ROYAL SCEPTER (BOTTOM-LEFT - STATIC) -->
+            <img src="assets/corner_balloon/27_royal_scepter.png" class="ff-scepter-bottom-left" id="ffScepterBottomLeft" alt="Royal Scepter" />
+
+            <!-- FIRST FRONTEND PINK BOW (BOTTOM-RIGHT - STATIC) -->
+            <img src="assets/corner_balloon/03_bow_blush_pink.png" class="ff-bow-bottom-right" id="ffBowBottomRight" alt="Pink Blush Bow" />
+
+            <!-- MAGICAL ENERGY & PARTICLES CANVAS (Z-INDEX 10 - Organic swirling golden energy & escaping wisps) -->
+            <canvas id="magicEnergyCanvas" class="magic-energy-canvas"></canvas>
+
+            <!-- FOREGROUND ELEMENTS (Z-INDEX 25 - Framed Video, 2 Dogs, Candle) -->
+            <div class="layer scroll-layer" id="scrollLayer">
+                <div class="video-frame-wrapper" id="videoFrameWrapper">
+                    <img src="assets/Final front image.png" id="scrollVideo" class="scroll-video front-page-image" alt="Birthday front page" />
+                </div>
+            </div>
+            <video src="assets/dog_left.webm" class="layer puppy-left" id="dogLeft" autoplay loop muted playsinline></video>
+            <img src="assets/left_dog_thinking_cloud.png" class="layer puppy-left-cloud" id="dogLeftCloud" alt="Left Dog Thinking Cloud" />
+            <video src="assets/dog_right.webm" class="layer puppy-right" id="dogRight" autoplay loop muted playsinline></video>
+
+            <div class="candle-wrapper lit" id="candleWrapper" role="button" tabindex="0" aria-label="Interactive Candle">
+                <div class="candle-halo" id="candleHalo"></div>
+                <img src="assets/candle_unlit_base.png" alt="Golden Candle" class="candle-base" id="candleBase">
+                <img src="assets/flame_only.png" alt="Candle Flame" class="candle-flame" id="candleFlame">
+                <canvas id="sparkleCanvas" class="sparkle-canvas"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <!-- GOLDEN LIGHT TRANSITION OVERLAY (Z-INDEX 100 - Viewport overlay during reveal) -->
+    <div class="golden-light-takeover" id="goldenLightTakeover"></div>
+
+    <!-- ===== GOLDEN BACKDROP BLINK FIX — START ===== -->
+    <div class="golden-transition-backdrop" id="goldenTransitionBackdrop" aria-hidden="true"></div>
+    <!-- ===== GOLDEN BACKDROP BLINK FIX — END ===== -->
+
+    <!-- ===== HANDOFF LOADING SCREEN — START ===== -->
+    <div class="handoff-loading-screen" id="handoffLoadingScreen" aria-hidden="true">
+        <img src="assets/decorations/final_loading_text.png" class="handoff-loading-img" alt="" />
+    </div>
+    <!-- ===== HANDOFF LOADING SCREEN — END ===== -->
+
+    <!-- ===== BIRTHDAY REVEAL ASSET COMPOSITION START ===== -->
+    <div class="birthday-reveal-overlay" id="birthdayRevealOverlay" aria-hidden="true">
+        <!-- Outer Left & Right Side Balloon Framing Layer (Z-INDEX 5) -->
+        <div class="birthday-decorations-layer" id="birthdayDecorationsLayer">
+            <!-- LUXURIOUS LEFT SIDE BALLOON & ROYAL FRAME (Outer 0% - 22% Left Margin) -->
+            <img src="assets/decorations/balloon-01.png" class="decor-item balloon-hero-lg pos-left-1" alt="" />
+            <img src="assets/decorations/17_balloon_gold_star.png" class="decor-item balloon-hero-sm pos-left-2" alt="" />
+            <img src="assets/decorations/balloon-19.png" class="decor-item balloon-hero-md pos-left-3" alt="" />
+            <img src="assets/decorations/balloon-03.png" class="decor-item balloon-hero-lg pos-left-4" alt="" />
+            <img src="assets/decorations/07_balloon_pink_heart.png" class="decor-item balloon-hero-sm pos-left-5" alt="" />
+            <img src="assets/decorations/balloon-05.png" class="decor-item balloon-hero-lg pos-left-6" alt="" />
+            <img src="assets/decorations/16_balloon_blush_round.png" class="decor-item balloon-hero-md pos-left-7" alt="" />
+            <img src="assets/decorations/05_royal_lantern.png" class="decor-item decor-accent-sm pos-left-8" alt="" />
+            <img src="assets/decorations/balloon-07.png" class="decor-item balloon-hero-lg pos-left-9" alt="" />
+            <img src="assets/decorations/03_bow_blush_pink.png" class="decor-item decor-accent-sm pos-left-10" alt="" />
+            <img src="assets/decorations/balloon-09.png" class="decor-item balloon-hero-md pos-left-11" alt="" />
+            <img src="assets/decorations/25_gift_box_lavender.png" class="decor-item decor-accent-sm pos-left-12" alt="" />
+            <img src="assets/decorations/11_balloon_pastel_blue_heart.png" class="decor-item balloon-hero-sm pos-left-13" alt="" />
+            <img src="assets/decorations/balloon-21.png" class="decor-item balloon-hero-lg pos-left-14" alt="" />
+            <img src="assets/decorations/balloon-15.png" class="decor-item balloon-hero-md pos-left-15" alt="" />
+            <img src="assets/decorations/balloon-17.png" class="decor-item balloon-hero-lg pos-left-16" alt="" />
+
+            <!-- LUXURIOUS RIGHT SIDE BALLOON & ROYAL FRAME (Outer 78% - 100% Right Margin) -->
+            <img src="assets/decorations/balloon-02.png" class="decor-item balloon-hero-lg pos-right-1" alt="" />
+            <img src="assets/decorations/13_balloon_purple_star.png" class="decor-item balloon-hero-sm pos-right-2" alt="" />
+            <img src="assets/decorations/14_balloon_ivory_round.png" class="decor-item balloon-hero-md pos-right-3" alt="" />
+            <img src="assets/decorations/balloon-04.png" class="decor-item balloon-hero-lg pos-right-4" alt="" />
+            <img src="assets/decorations/18_balloon_blush_oval.png" class="decor-item balloon-hero-sm pos-right-5" alt="" />
+            <img src="assets/decorations/balloon-06.png" class="decor-item balloon-hero-lg pos-right-6" alt="" />
+            <img src="assets/decorations/08_balloon_gold_round.png" class="decor-item balloon-hero-md pos-right-7" alt="" />
+            <img src="assets/decorations/27_royal_scepter.png" class="decor-item decor-accent-sm pos-right-8" alt="" />
+            <img src="assets/decorations/balloon-08.png" class="decor-item balloon-hero-lg pos-right-9" alt="" />
+            <img src="assets/decorations/28_gold_bow.png" class="decor-item decor-accent-sm pos-right-10" alt="" />
+            <img src="assets/decorations/balloon-10.png" class="decor-item balloon-hero-md pos-right-11" alt="" />
+            <img src="assets/decorations/26_crowned_teddy_bear.png" class="decor-item decor-accent-sm pos-right-12" alt="" />
+            <img src="assets/decorations/12_balloon_peach_round.png" class="decor-item balloon-hero-sm pos-right-13" alt="" />
+            <img src="assets/decorations/balloon-12.png" class="decor-item balloon-hero-lg pos-right-14" alt="" />
+            <img src="assets/decorations/balloon-16.png" class="decor-item balloon-hero-md pos-right-15" alt="" />
+            <img src="assets/decorations/balloon-18.png" class="decor-item balloon-hero-lg pos-right-16" alt="" />
+        </div>
+
+        <!-- Subtle Magical Atmosphere Layer (Golden Sparkles) -->
+        <div class="birthday-sparkles-layer" aria-hidden="true">
+            <div class="birthday-sparkle sp-1"></div>
+            <div class="birthday-sparkle sp-2"></div>
+            <div class="birthday-sparkle sp-3"></div>
+            <div class="birthday-sparkle sp-4"></div>
+            <div class="birthday-sparkle sp-5"></div>
+            <div class="birthday-sparkle sp-6"></div>
+            <div class="birthday-sparkle sp-7"></div>
+            <div class="birthday-sparkle sp-8"></div>
+        </div>
+
+        <!-- Centered Royal Core Layer: Crown -> Main Text -> Cake (Z-INDEX 10) -->
+        <div class="birthday-text-layer" id="birthdayTextLayer">
+            <div class="royal-center-stack" id="royalCenterStack">
+                <!-- Royal Gold Jeweled Crown (Directly Above Text) -->
+                <img src="assets/decorations/01_crown_gold_jeweled.png" alt="Royal Crown" class="royal-crown-img" id="royalCrownImg">
+                
+                <!-- Main Birthday Text Artwork (Exact Viewport Center, Hero Element) -->
+                <div class="birthday-text-box" id="birthdayTextBox">
+                    <img src="assets/birthday_text.png" alt="Happy Birthday PIASHA" class="birthday-text-img" id="birthdayTextImg">
+                </div>
+
+                <!-- Royal Birthday Cake (Directly Below Text - Teardrop Asset Specified by User) -->
+                <img src="assets/decorations/15_balloon_lavender_teardrop.png" alt="Birthday Cake" class="royal-cake-img" id="royalCakeImg">
+            </div>
+        </div>
+    </div>
+    <!-- ===== BIRTHDAY REVEAL ASSET COMPOSITION END ===== -->
+
+    <!-- FINAL SCROLLING SECTION: MAGICAL MEMORY GARDEN WORLD -->
+    <section class="memory-garden-section" id="memoryGardenSection" aria-label="Magical Memory Garden">
+        <!-- 1. BACKGROUND IMAGE LAYER (Z-INDEX 1) -->
+        <div class="garden-bg-layer" id="gardenBgLayer" aria-hidden="true">
+            <img src="assets/scrolling_page_finally.png" class="garden-bg-img" id="gardenBgImg" alt="Garden Background" />
+        </div>
+
+        <!-- 2. MAGICAL LIGHTING & ATMOSPHERIC EFFECTS LAYER (Z-INDEX 2) -->
+        <div class="garden-atmosphere-layer" id="gardenAtmosphereLayer" aria-hidden="true">
+            <canvas id="gardenAtmosphereCanvas" class="garden-atmosphere-canvas"></canvas>
+        </div>
+
+        <!-- 3. LONG VERTICAL ROPE / STRING LAYER (Z-INDEX 3) -->
+        <div class="garden-rope-layer" id="gardenRopeLayer" aria-hidden="true">
+            <!-- Per-section continuous rope anchors are dynamically rendered inside each segment (Sections 2-14) -->
+        </div>
+
+        <!-- 4. HANGING PHOTO FRAMES LAYER (Z-INDEX 4) -->
+        <div class="garden-photos-layer" id="gardenPhotosLayer">
+            <!-- Hanging photo frames architecture placeholder -->
+        </div>
+
+        <!-- 5. NOTES / CARDS LAYER (Z-INDEX 5) -->
+        <div class="garden-notes-layer" id="gardenNotesLayer">
+            <!-- Notes/cards architecture placeholder -->
+        </div>
+
+        <!-- 6. TEXT / CONTENT LAYER (Z-INDEX 6) -->
+        <div class="garden-content-layer" id="gardenContentLayer">
+            <div class="segments-container" id="segmentsContainer">
+                <div class="garden-segment segment-side-left segment-standalone" id="gardenSegment-1" data-segment-index="0">
+                    <div class="section1-balloons-container" aria-hidden="true">
+                        <img src="assets/corner_balloon/balloon_01.png" class="section1-balloon section1-balloon-top-left-1" alt="Section 1 Upper Left Balloon 1" />
+                        <img src="assets/corner_balloon/balloon_05.png" class="section1-balloon section1-balloon-top-left-2" alt="Section 1 Upper Left Balloon 2" />
+                        <img src="assets/corner_balloon/balloon_09.png" class="section1-balloon section1-balloon-top-right-1" alt="Section 1 Upper Right Balloon 1" />
+                        <img src="assets/corner_balloon/balloon_14.png" class="section1-balloon section1-balloon-top-right-2" alt="Section 1 Upper Right Balloon 2" />
+                        <img src="assets/corner_balloon/balloon_04.png" class="section1-balloon section1-balloon-bottom-left" alt="Section 1 Bottom Left Balloon" />
+                        <img src="assets/corner_balloon/balloon_11.png" class="section1-balloon section1-balloon-bottom-right" alt="Section 1 Bottom Right Balloon" />
+                    </div>
+                    <div class="rope-clip-anchor" aria-hidden="true">
+                        <div class="rope-peg"></div>
+                    </div>
+                    <div class="segment-inner standalone-artwork-inner">
+                        <div class="standalone-artwork-wrapper" id="artworkWrapper-1">
+                            <img src="assets/after_png_main_photo.png" class="standalone-artwork-img" alt="Memory Artwork 1" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. PARTICLES / SPARKLES LAYER (Z-INDEX 7) -->
+        <div class="garden-particles-layer" id="gardenParticlesLayer" aria-hidden="true">
+            <canvas id="gardenParticlesCanvas" class="garden-particles-canvas"></canvas>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 6 IN-PAGE VIDEO OVERLAY VIEWER — START ===== -->
+    <div class="sec6-video-overlay" id="sec6VideoOverlay" aria-hidden="true">
+        <div class="sec6-overlay-backdrop" id="sec6VideoOverlayBackdrop"></div>
+        <div class="sec6-overlay-content" id="sec6OverlayContent">
+            <button class="sec6-overlay-close-btn" id="sec6VideoOverlayCloseBtn" aria-label="Close Video Viewer">&times;</button>
+            <video class="sec6-overlay-video" id="sec6VideoOverlayVideo" controls playsinline></video>
+        </div>
+    </div>
+    <!-- ===== SECTION 6 IN-PAGE VIDEO OVERLAY VIEWER — END ===== -->
+
+    <script src="node_modules/animejs/dist/bundles/anime.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

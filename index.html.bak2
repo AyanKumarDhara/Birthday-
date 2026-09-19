@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Birthday Scene - Royal Gate Transition</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Great+Vibes&family=Outfit:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="lock-scroll">
+    <main class="scene-container">
+        <div class="stage" id="stage">
+            <!-- STATIONARY BACKGROUND: ROYAL GATE (Z-INDEX 1) -->
+            <img src="assets/New gate final.png" alt="Royal Gate Background" class="layer bg-layer" id="bgLayer">
+
+            <!-- GOLDEN PORTAL WHIRLPOOL CONTAINER (Z-INDEX 4 - Seamless transparent blend over doorway) -->
+            <div class="golden-portal-wrapper" id="goldenPortalWrapper">
+                <div class="portal-whirlpool whirlpool-layer-1" id="whirlpool1"></div>
+                <div class="portal-whirlpool whirlpool-layer-2" id="whirlpool2"></div>
+                <div class="portal-glow-core" id="portalGlowCore"></div>
+            </div>
+
+            <!-- MAGICAL ENERGY & PARTICLES CANVAS (Z-INDEX 10 - Golden wisps & embers flowing outward) -->
+            <canvas id="magicEnergyCanvas" class="magic-energy-canvas"></canvas>
+
+            <!-- FOREGROUND ELEMENTS (Z-INDEX 25 - Parchment, 2 Dogs, Candle) -->
+            <img src="assets/raw_scroll.png" alt="Scroll Parchment" class="layer scroll-layer" id="scrollLayer">
+            <video src="assets/dog_left.webm" class="layer puppy-left" id="dogLeft" autoplay loop muted playsinline></video>
+            <video src="assets/dog_right.webm" class="layer puppy-right" id="dogRight" autoplay loop muted playsinline></video>
+
+            <div class="candle-wrapper lit" id="candleWrapper" role="button" tabindex="0" aria-label="Interactive Candle">
+                <div class="candle-halo" id="candleHalo"></div>
+                <img src="assets/candle_unlit_base.png" alt="Golden Candle" class="candle-base" id="candleBase">
+                <img src="assets/flame_only.png" alt="Candle Flame" class="candle-flame" id="candleFlame">
+                <canvas id="sparkleCanvas" class="sparkle-canvas"></canvas>
+            </div>
+
+            <!-- GOLDEN LIGHT TRANSITION OVERLAY (Z-INDEX 100 - Expands to cover entire viewport) -->
+            <div class="golden-light-takeover" id="goldenLightTakeover"></div>
+        </div>
+    </main>
+
+    <script src="node_modules/animejs/dist/bundles/anime.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

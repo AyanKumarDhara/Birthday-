@@ -1,0 +1,436 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const stage = document.getElementById('stage');
+    const candleWrapper = document.getElementById('candleWrapper');
+    const scrollLayer = document.getElementById('scrollLayer');
+    const dogLeft = document.getElementById('dogLeft');
+    const dogRight = document.getElementById('dogRight');
+    const doorwayEnergyCore = document.getElementById('doorwayEnergyCore');
+    const magicEnergyCanvas = document.getElementById('magicEnergyCanvas');
+    const goldenLightTakeover = document.getElementById('goldenLightTakeover');
+    const sparkleCanvas = document.getElementById('sparkleCanvas');
+
+    const ctx = sparkleCanvas ? sparkleCanvas.getContext('2d') : null;
+    const magicCtx = magicEnergyCanvas ? magicEnergyCanvas.getContext('2d') : null;
+
+    let isLit = true;
+    let isBlownOut = false;
+    let transitionStarted = false;
+    let particles = [];
+    let magicParticles = [];
+    let magicStreaming = false;
+
+    function resizeCanvas() {
+        if (candleWrapper && sparkleCanvas) {
+            sparkleCanvas.width = sparkleCanvas.clientWidth;
+            sparkleCanvas.height = sparkleCanvas.clientHeight;
+        }
+        if (magicEnergyCanvas && stage) {
+            magicEnergyCanvas.width = stage.clientWidth;
+            magicEnergyCanvas.height = stage.clientHeight;
+        }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Audio Synthesizers (Web Audio API)
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    // Air Blow Sound
+    function playBlowSound() {
+        try {
+            const ac = getAudioCtx();
+            const now = ac.currentTime;
+            const bufferSize = ac.sampleRate * 0.35;
+            const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = ac.createBufferSource();
+            noise.buffer = buffer;
+            const filter = ac.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(650, now);
+            filter.frequency.exponentialRampToValueAtTime(120, now + 0.35);
+
+            const gain = ac.createGain();
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.005, now + 0.35);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ac.destination);
+
+            noise.start(now);
+            noise.stop(now + 0.35);
+        } catch (e) {}
+    }
+
+    // Interactive Candle Trigger
+    candleWrapper.addEventListener('click', blowOutCandleAndStartTransition);
+    candleWrapper.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            blowOutCandleAndStartTransition();
+        }
+    });
+
+    function blowOutCandleAndStartTransition() {
+        if (transitionStarted || isBlownOut || !isLit) return; // Lock interaction
+
+        transitionStarted = true;
+        isBlownOut = true;
+        isLit = false;
+
+        // 1. Play candle blowout sound and animation (t = 0.00s)
+        playBlowSound();
+        candleWrapper.classList.add('blowing');
+
+        // 2. Extinguish flame: burnt wick on candleBase remains visible & smoke appears (t = 0.18s)
+        setTimeout(() => {
+            candleWrapper.classList.remove('blowing');
+            candleWrapper.classList.remove('lit');
+
+            // Smoke effect appears naturally curling up from the burnt wick
+            spawnSoftMistPuff(25);
+        }, 180);
+
+        // 3. Smoothly fade out ONLY the parchment note, both dogs, and candle (t = 0.75s)
+        setTimeout(() => {
+            if (scrollLayer) scrollLayer.classList.add('fading');
+            if (dogLeft) dogLeft.classList.add('fading');
+            if (dogRight) dogRight.classList.add('fading');
+            if (candleWrapper) candleWrapper.classList.add('fading');
+        }, 750);
+
+        // 4. Foreground disappears -> slow, subtle 12% camera push toward center of gate (t = 1.55s)
+        setTimeout(() => {
+            if (scrollLayer) scrollLayer.style.display = 'none';
+            if (dogLeft) dogLeft.style.display = 'none';
+            if (dogRight) dogRight.style.display = 'none';
+            if (candleWrapper) candleWrapper.style.display = 'none';
+
+            // Subtle 12% camera push (keeping full castle architecture clearly visible)
+            stage.classList.add('zooming');
+
+            // Doorway golden energy surges and becomes more dynamic
+            if (doorwayEnergyCore) {
+                doorwayEnergyCore.classList.add('surging');
+            }
+
+            // Delicate golden wisps & glowing particles flow outward from gate toward viewer
+            startMagicDoorwayStream();
+        }, 1550);
+
+        // 5. Camera reaches its subtle final position (~12%) and stops; golden light expands across viewport (t = 3.30s)
+        setTimeout(() => {
+            if (goldenLightTakeover) {
+                goldenLightTakeover.classList.add('expanding');
+            }
+        }, 3300);
+
+        // 6. Viewport completely covered by golden-white light -> trigger callback & stop (t = 4.90s)
+        setTimeout(() => {
+            if (typeof window.onGateTransitionComplete === 'function') {
+                window.onGateTransitionComplete();
+            }
+        }, 4900);
+    }
+
+    // Default clean callback hook (user can connect future main website section later)
+    if (!window.onGateTransitionComplete) {
+        window.onGateTransitionComplete = function() {
+            console.log("Gate transition complete: golden-white light takeover finished.");
+            window.__gateCallbackFired = true;
+        };
+    }
+
+    // Outward Flowing Golden Particle (Simulates 3D perspective flow toward viewer)
+    class OutwardGoldenParticle {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.width * 0.08 : 60);
+            this.y = cy + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.height * 0.22 : 120);
+
+            const angle = Math.atan2(this.y - cy, this.x - cx) + (Math.random() - 0.5) * 0.8;
+            const speed = Math.random() * 1.6 + 0.9;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed + (Math.random() - 0.5) * 0.4;
+
+            this.baseSize = Math.random() * 1.8 + 1.2;
+            this.scale = 0.5;
+            this.growth = Math.random() * 0.035 + 0.02;
+
+            this.alpha = 0.1;
+            this.maxAlpha = Math.random() * 0.5 + 0.45;
+            this.fadeIn = true;
+            this.decay = Math.random() * 0.008 + 0.005;
+
+            const colors = ['#ffffff', '#fffbeb', '#fef08a', '#fde047', '#fbbf24', '#f59e0b'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.driftPhase = Math.random() * Math.PI * 2;
+            this.driftSpeed = Math.random() * 0.06 + 0.03;
+        }
+
+        update() {
+            this.scale += this.growth;
+            this.x += this.vx * (1 + this.scale * 0.8);
+            this.y += this.vy * (1 + this.scale * 0.8) + Math.sin(this.driftPhase) * 0.4;
+            this.driftPhase += this.driftSpeed;
+
+            if (this.fadeIn) {
+                this.alpha += 0.04;
+                if (this.alpha >= this.maxAlpha) {
+                    this.fadeIn = false;
+                }
+            } else {
+                this.alpha -= this.decay;
+            }
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+
+            const r = this.baseSize * this.scale;
+            c.fillStyle = this.color;
+            c.shadowColor = '#fbbf24';
+            c.shadowBlur = Math.min(22, 6 * this.scale);
+
+            c.beginPath();
+            c.arc(this.x, this.y, r, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    // Delicate Golden Wisp Ribbon Stream
+    class GoldenWispStream {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.width * 0.06 : 50);
+            this.y = cy + (Math.random() - 0.5) * (magicEnergyCanvas ? magicEnergyCanvas.height * 0.18 : 100);
+            this.points = [{ x: this.x, y: this.y }];
+            this.maxPoints = Math.floor(Math.random() * 12 + 10);
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 1.8 + 1.0;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.curve = (Math.random() - 0.5) * 0.08;
+
+            this.width = Math.random() * 2 + 1.5;
+            this.scale = 0.6;
+            this.alpha = 0.85;
+            this.decay = Math.random() * 0.012 + 0.008;
+            this.color = Math.random() > 0.4 ? '#fef08a' : '#ffffff';
+        }
+
+        update() {
+            this.scale += 0.025;
+            const vxNew = this.vx * Math.cos(this.curve) - this.vy * Math.sin(this.curve);
+            const vyNew = this.vx * Math.sin(this.curve) + this.vy * Math.cos(this.curve);
+            this.vx = vxNew;
+            this.vy = vyNew;
+
+            this.x += this.vx * (1 + this.scale * 0.7);
+            this.y += this.vy * (1 + this.scale * 0.7);
+
+            this.points.unshift({ x: this.x, y: this.y });
+            if (this.points.length > this.maxPoints) {
+                this.points.pop();
+            }
+            this.alpha -= this.decay;
+        }
+
+        draw(c) {
+            if (this.alpha <= 0 || this.points.length < 2) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+            c.strokeStyle = this.color;
+            c.lineWidth = this.width * this.scale;
+            c.lineCap = 'round';
+            c.shadowColor = '#f59e0b';
+            c.shadowBlur = 10;
+
+            c.beginPath();
+            c.moveTo(this.points[0].x, this.points[0].y);
+            for (let i = 1; i < this.points.length; i++) {
+                c.lineTo(this.points[i].x, this.points[i].y);
+            }
+            c.stroke();
+            c.restore();
+        }
+    }
+
+    function startMagicDoorwayStream() {
+        if (!magicEnergyCanvas) return;
+        magicStreaming = true;
+        const cx = magicEnergyCanvas.width * 0.5;
+        const cy = magicEnergyCanvas.height * 0.532;
+
+        const streamInterval = setInterval(() => {
+            if (!magicStreaming) {
+                clearInterval(streamInterval);
+                return;
+            }
+            for (let i = 0; i < 4; i++) {
+                magicParticles.push(new OutwardGoldenParticle(cx, cy));
+            }
+            if (Math.random() < 0.4) {
+                magicParticles.push(new GoldenWispStream(cx, cy));
+            }
+        }, 60);
+
+        setTimeout(() => {
+            magicStreaming = false;
+        }, 2200);
+    }
+    class SoftMistParticle {
+        constructor(cx, cy) {
+            this.x = cx + (Math.random() - 0.5) * 6;
+            this.y = cy + (Math.random() - 0.5) * 4;
+            this.size = Math.random() * 3 + 3;
+            this.maxSize = Math.random() * 8 + 12;
+            this.vx = (Math.random() - 0.5) * 0.7;
+            this.vy = -Math.random() * 1.2 - 0.5;
+            this.driftOffset = Math.random() * Math.PI * 2;
+
+            const mistColors = ['254, 240, 138', '255, 255, 255', '245, 158, 11', '226, 232, 240'];
+            this.rgb = mistColors[Math.floor(Math.random() * mistColors.length)];
+
+            this.alpha = Math.random() * 0.35 + 0.25;
+            this.decay = Math.random() * 0.006 + 0.004;
+        }
+
+        update() {
+            this.x += this.vx + Math.sin(this.y * 0.08 + this.driftOffset) * 0.3;
+            this.y += this.vy;
+            if (this.size < this.maxSize) this.size += 0.12;
+            this.alpha -= this.decay;
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+
+            const grad = c.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            grad.addColorStop(0, `rgba(${this.rgb}, 0.75)`);
+            grad.addColorStop(0.4, `rgba(${this.rgb}, 0.35)`);
+            grad.addColorStop(0.85, `rgba(${this.rgb}, 0.08)`);
+            grad.addColorStop(1, `rgba(${this.rgb}, 0)`);
+
+            c.fillStyle = grad;
+            c.beginPath();
+            c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    class MagicSparkleParticle {
+        constructor(cx, cy, isGold = false) {
+            this.x = cx + (Math.random() - 0.5) * 20;
+            this.y = cy + (Math.random() - 0.5) * 20;
+            this.size = Math.random() * 4 + 1.5;
+            this.vx = (Math.random() - 0.5) * 4;
+            this.vy = -Math.random() * 3 - 0.5;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.02 + 0.01;
+            this.color = isGold 
+                ? ['#ffffff', '#fef08a', '#fbbf24', '#f59e0b'][Math.floor(Math.random() * 4)]
+                : ['#ffffff', '#e0e7ff', '#fef08a'][Math.floor(Math.random() * 3)];
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+        }
+
+        draw(c) {
+            if (this.alpha <= 0) return;
+            c.save();
+            c.globalAlpha = Math.max(0, this.alpha);
+            c.fillStyle = this.color;
+            c.shadowBlur = 8;
+            c.shadowColor = this.color;
+
+            c.beginPath();
+            c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
+        }
+    }
+
+    function spawnSoftMistPuff(count = 20) {
+        const cx = sparkleCanvas.width * 0.5;
+        const cy = sparkleCanvas.height * 0.20;
+
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                particles.push(new SoftMistParticle(cx, cy));
+            }, i * 20);
+        }
+    }
+
+    function spawnMagicSparkles(count = 35) {
+        const cx = sparkleCanvas.width * 0.5;
+        const cy = sparkleCanvas.height * 0.5;
+
+        for (let i = 0; i < count; i++) {
+            particles.push(new MagicSparkleParticle(cx, cy, false));
+        }
+    }
+
+    function spawnGoldenLightSparkles(count = 60) {
+        const cx = sparkleCanvas.width * 0.5;
+        const cy = sparkleCanvas.height * 0.4;
+
+        for (let i = 0; i < count; i++) {
+            particles.push(new MagicSparkleParticle(cx, cy, true));
+        }
+    }
+
+    // Main Animation Loop
+    function animate() {
+        if (ctx && sparkleCanvas) {
+            ctx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw(ctx);
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        if (magicCtx && magicEnergyCanvas) {
+            magicCtx.clearRect(0, 0, magicEnergyCanvas.width, magicEnergyCanvas.height);
+            for (let i = magicParticles.length - 1; i >= 0; i--) {
+                const p = magicParticles[i];
+                p.update();
+                p.draw(magicCtx);
+                if (p.alpha <= 0) {
+                    magicParticles.splice(i, 1);
+                }
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+});
