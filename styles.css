@@ -850,6 +850,21 @@ body.garden-mode {
     }
 }
 
+
+/* SECTION 2 SPECIFIC SURGICAL SCALE OVERRIDES (~12% SMALLER FOR SPACIOUS COMPOSITION) */
+#gardenSegment-2 .section2-frame-img {
+    width: min(756px, 51vw);
+}
+
+.section-2-teddy {
+    width: min(334px, 30vw);
+}
+
+.section-2-right-dog {
+    width: min(338px, 27.7vw);
+    aspect-ratio: 385 / 479;
+}
+
 /* GLOBAL FRONTEND 2 REUSABLE THINKING CLOUD NOTE (Original Unmirrored PNG) */
 .section-thinking-cloud,
 .section-2-thinking-cloud,
