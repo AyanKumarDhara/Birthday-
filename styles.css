@@ -2455,32 +2455,54 @@ body.garden-mode {
 /* ==========================================================================
    SECTION 2 SURGICAL OVERRIDES (MATCHING IMAGE 2 APPROVED REFERENCE)
    ========================================================================== */
-#gardenSegment-2 .section2-frame-img {
+
+/* ==========================================================================
+   SECTIONS 2–5 APPROVED MASTER LAYOUT GEOMETRY (MATCHING SECTION 2 MASTER)
+   ========================================================================== */
+#gardenSegment-2 .section2-frame-img,
+#gardenSegment-3 .section2-frame-img,
+#gardenSegment-4 .section2-frame-img,
+#gardenSegment-5 .section2-frame-img {
     width: min(650px, 46vw) !important;
 }
 
-#gardenSegment-2 .section2-frame-wrapper-1 {
+#gardenSegment-2 .section2-frame-wrapper-1,
+#gardenSegment-3 .section2-frame-wrapper-1,
+#gardenSegment-4 .section2-frame-wrapper-1,
+#gardenSegment-5 .section2-frame-wrapper-1 {
     top: 5vh !important;
 }
 
-#gardenSegment-2 .section2-frame-wrapper-2 {
+#gardenSegment-2 .section2-frame-wrapper-2,
+#gardenSegment-3 .section2-frame-wrapper-2,
+#gardenSegment-4 .section2-frame-wrapper-2,
+#gardenSegment-5 .section2-frame-wrapper-2 {
     top: 53vh !important;
 }
 
-#gardenSegment-2 .section-2-teddy {
+#gardenSegment-2 .section-2-teddy,
+#gardenSegment-3 .section-3-teddy,
+#gardenSegment-4 .section-4-teddy,
+#gardenSegment-5 .section-5-teddy {
     width: min(320px, 28vw) !important;
     left: calc(var(--rope-x, 38%) / 2 - 25px) !important;
     bottom: 4vh !important;
 }
 
-#gardenSegment-2 .section-2-right-dog {
+#gardenSegment-2 .section-2-right-dog,
+#gardenSegment-3 .section-3-right-dog,
+#gardenSegment-4 .section-4-right-dog,
+#gardenSegment-5 .section-5-right-dog {
     width: min(330px, 27vw) !important;
     aspect-ratio: 385 / 479 !important;
     right: max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 160px)) !important;
     bottom: 4vh !important;
 }
 
-#gardenSegment-2 .section-2-thinking-cloud {
+#gardenSegment-2 .section-2-thinking-cloud,
+#gardenSegment-3 .section-3-thinking-cloud,
+#gardenSegment-4 .section-4-thinking-cloud,
+#gardenSegment-5 .section-5-thinking-cloud {
     width: min(420px, 34vw) !important;
     right: calc(max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 160px)) + 175px) !important;
     bottom: calc(4vh + min(365px, 29.5vw)) !important;
