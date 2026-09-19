@@ -2483,5 +2483,5 @@ body.garden-mode {
 #gardenSegment-2 .section-2-thinking-cloud {
     width: min(420px, 34vw) !important;
     right: calc(max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 160px)) + 175px) !important;
-    bottom: calc(4vh + min(340px, 28vw)) !important;
+    bottom: calc(4vh + min(365px, 29.5vw)) !important;
 }
