@@ -26,17 +26,17 @@
        ========================================================================== */
 
     /* GLOBAL FRONTEND 2 TEDDY BEAR MASTER POSITION & SIZE CONFIGURATION */
-    --teddy-size: min(235px, 21vw);
+    --teddy-size: min(380px, 34vw);
     --teddy-left: calc(var(--rope-x, 38%) / 2 - 53px);
     --teddy-bottom: 6vh;
 
     /* Section 2 Right Dog (DOG 7 FINAL) Configuration */
-    --right-dog-size: min(255px, 22.5vw);
+    --right-dog-size: min(385px, 31.5vw);
     --right-dog-right: max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 210px));
     --right-dog-bottom: 5vh;
 
     /* Section 2 Thinking Cloud Note Configuration */
-    --cloud-size: min(370px, 32vw);
+    --cloud-size: min(560px, 44vw);
     --cloud-right: calc(var(--right-dog-right) + 250px);
     --cloud-bottom: calc(5vh + min(415px, 34vw));
 
@@ -2451,3 +2451,37 @@ body.garden-mode {
 }
 
 /* ===== TEMPORARY SECOND FRONTEND BACKGROUND FILTER — END ===== */
+
+/* ==========================================================================
+   SECTION 2 SURGICAL OVERRIDES (MATCHING IMAGE 2 APPROVED REFERENCE)
+   ========================================================================== */
+#gardenSegment-2 .section2-frame-img {
+    width: min(650px, 46vw) !important;
+}
+
+#gardenSegment-2 .section2-frame-wrapper-1 {
+    top: 5vh !important;
+}
+
+#gardenSegment-2 .section2-frame-wrapper-2 {
+    top: 53vh !important;
+}
+
+#gardenSegment-2 .section-2-teddy {
+    width: min(320px, 28vw) !important;
+    left: calc(var(--rope-x, 38%) / 2 - 25px) !important;
+    bottom: 4vh !important;
+}
+
+#gardenSegment-2 .section-2-right-dog {
+    width: min(330px, 27vw) !important;
+    aspect-ratio: 385 / 479 !important;
+    right: max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 160px)) !important;
+    bottom: 4vh !important;
+}
+
+#gardenSegment-2 .section-2-thinking-cloud {
+    width: min(450px, 36vw) !important;
+    right: calc(max(2vw, calc(100% - var(--rope-x, 38%) - 38vw - 160px)) + 180px) !important;
+    bottom: calc(4vh + min(310px, 28vw)) !important;
+}
