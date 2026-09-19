@@ -829,6 +829,7 @@ body.garden-mode {
     right: var(--right-dog-right);
     bottom: var(--right-dog-bottom);
     width: var(--right-dog-size);
+    aspect-ratio: 385 / 479;
     height: auto;
     object-fit: contain;
     transform: scaleX(-1); /* Horizontally mirror video so dog faces LEFT */
