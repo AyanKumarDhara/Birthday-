@@ -851,18 +851,22 @@ body.garden-mode {
 }
 
 
-/* SECTION 2 SPECIFIC SURGICAL SCALE OVERRIDES (~12% SMALLER FOR SPACIOUS COMPOSITION) */
+/* SECTION 2 SPECIFIC SURGICAL SCALE OVERRIDES (MATCHING IMAGE 2 REFERENCE SCALE) */
 #gardenSegment-2 .section2-frame-img {
-    width: min(756px, 51vw);
+    width: min(520px, 36vw);
 }
 
-.section-2-teddy {
-    width: min(334px, 30vw);
+#gardenSegment-2 .section-2-teddy {
+    width: min(235px, 21vw);
 }
 
-.section-2-right-dog {
-    width: min(338px, 27.7vw);
+#gardenSegment-2 .section-2-right-dog {
+    width: min(255px, 22.5vw);
     aspect-ratio: 385 / 479;
+}
+
+#gardenSegment-2 .section-2-thinking-cloud {
+    width: min(370px, 32vw);
 }
 
 /* GLOBAL FRONTEND 2 REUSABLE THINKING CLOUD NOTE (Original Unmirrored PNG) */
