@@ -383,17 +383,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function startMusicOnUserGesture() {
         if (!isFirstFrontendMusicStopped && firstFrontendBgMusic && !transitionStarted) {
             initFirstFrontendWebAudio();
+            const playAudio = () => {
+                if (firstFrontendBgMusic && firstFrontendBgMusic.paused && !isFirstFrontendMusicStopped && !transitionStarted) {
+                    firstFrontendBgMusic.volume = 1.0;
+                    firstFrontendBgMusic.loop = true;
+                    firstFrontendBgMusic.play().catch(() => {});
+                }
+            };
             if (ffAudioCtx && ffAudioCtx.state === 'suspended') {
-                ffAudioCtx.resume().catch(() => {});
-            }
-            if (firstFrontendBgMusic.paused) {
-                firstFrontendBgMusic.volume = 1.0;
-                firstFrontendBgMusic.loop = true;
-                firstFrontendBgMusic.play().catch(() => {});
+                ffAudioCtx.resume().then(playAudio).catch(() => {
+                    playAudio();
+                });
+            } else {
+                playAudio();
             }
         }
     }
     document.addEventListener('pointerdown', startMusicOnUserGesture, { passive: true });
+    document.addEventListener('touchstart', startMusicOnUserGesture, { passive: true });
+    document.addEventListener('click', startMusicOnUserGesture, { passive: true });
     document.addEventListener('keydown', startMusicOnUserGesture, { passive: true });
 
     // --------------------------------------------------------------------------
